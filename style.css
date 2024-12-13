@@ -217,15 +217,24 @@ body {
 .weather-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 5px;
+    padding: 0;
+    margin: 0;
 }
 
 /* Weather Parameters */
 .weather-param {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-weight: 500;
+    gap: 8px;
+    padding: 2px;
+    margin: 0;
+    height: 45px;
+}
+
+.weather-param > div {
+    margin: 0;
+    padding: 0;
 }
 
 .param-icon {
@@ -235,33 +244,41 @@ body {
 }
 
 .param-value {
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+    font-size: 16px;
 }
 
 .param-label {
-    font-size: 13px;
-    opacity: 0.8;
-    font-weight: 500;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    font-size: 12px;
 }
 
 /* Wind Direction Compass */
 .wind-compass {
-    grid-column: 1 / -1;
-    height: 150px;
-    background: rgba(60, 60, 60, 0.3);
-    border-radius: 50%;
-    position: relative;
-    margin: 35px 25px;
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 5px;
+    padding: 0;
 }
 
 .compass-circle {
-    width: 100%;
-    height: 100%;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    width: 180px;
+    height: 180px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     position: relative;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .compass-marks {
@@ -272,15 +289,14 @@ body {
 
 .compass-direction {
     position: absolute;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
 }
 
-.compass-direction.north { top: -20px; left: 50%; transform: translateX(-50%); }
-.compass-direction.east { right: -20px; top: 50%; transform: translateY(-50%); }
-.compass-direction.south { bottom: -20px; left: 50%; transform: translateX(-50%); }
-.compass-direction.west { left: -20px; top: 50%; transform: translateY(-50%); }
+.compass-direction.north { top: 10px; left: 50%; transform: translateX(-50%); }
+.compass-direction.south { bottom: 10px; left: 50%; transform: translateX(-50%); }
+.compass-direction.east { right: 10px; top: 50%; transform: translateY(-50%); }
+.compass-direction.west { left: 10px; top: 50%; transform: translateY(-50%); }
 
 .wind-indicator {
     position: absolute;
@@ -297,8 +313,7 @@ body {
     text-align: right;
     font-size: 13px;
     opacity: 0.8;
-    margin-top: 15px;
-    font-weight: 500;
+    margin-top: 10px;
 }
 
 /* Current Time in Header */
@@ -319,7 +334,9 @@ body {
 .param-gust {
     font-size: 12px;
     opacity: 0.8;
-    margin-top: 2px;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
     color: #FF00FF;
 }
 
@@ -359,4 +376,16 @@ body {
 .flight-conditions.lifr { background-color: purple; }
 .flight-conditions.windy { background-color: blue; }
 .flight-conditions.gusty { background-color: magenta; }
+
+/* Mobile adjustments */
+@media screen and (max-width: 768px) {
+    .weather-grid {
+        gap: 10px;
+    }
+    
+    .compass-circle {
+        width: 160px;
+        height: 160px;
+    }
+}
 
