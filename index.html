@@ -436,10 +436,6 @@ legend.addTo(map);
 
         // Set interval to fetch new data every 30 minutes (1800000 ms)
         setInterval(fetchMetarData, 1800000); // 30 minutes
-
-        const CORS_PROXY = 'https://corsproxy.io/?';  // Using a different CORS proxy
-        const URL = CORS_PROXY + encodeURIComponent('https://www.ifis.airways.co.nz/script/briefing/met_briefing_proc.asp');
-        const LOGIN_URL = CORS_PROXY + encodeURIComponent('https://www.ifis.airways.co.nz/secure/script/user_reg/login_proc.asp');
     </script>
 
 </body>
