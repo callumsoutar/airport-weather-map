@@ -1,0 +1,362 @@
+#map {
+    height: 100vh;
+    width: 100%;
+}
+
+/* Style for the legend */
+.info.legend {
+    background-color: rgba(80, 80, 80, 0.75);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    color: white;
+    top: 10px;
+    right: 10px;
+    min-width: 160px;
+}
+
+.info.legend i {
+    width: 16px;
+    height: 16px;
+    margin-right: 12px;
+    display: inline-block;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.info.legend br {
+    display: block;
+    margin-bottom: 12px;
+}
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #1a1a1a;
+}
+
+#map {
+    width: 100%;
+    height: 100vh;
+}
+
+/* No more map-title, it's removed */
+
+/* Legend title styling */
+.info.legend b {
+    font-size: 18px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+/* Make each legend item a flex container for better alignment */
+.info.legend div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Adjust the legend position on mobile */
+@media screen and (max-width: 768px) {
+    .info.legend {
+        top: 10px;
+        left: 10px;
+        padding: 15px;
+        min-width: auto;
+    }
+}
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #1a1a1a;
+}
+
+/* Hide title on mobile */
+@media screen and (max-width: 768px) {
+    .map-title {
+        display: none;
+    }
+}
+
+/* Ensure the 'metar-display' div is visible on desktop */
+#metar-display {
+    position: absolute;
+    top: 25px; /* Move it down 20px */
+    left: 10px;
+    font-size: 14px;
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+/* Hide 'metar-display' on mobile devices */
+@media (max-width: 768px) {
+    #metar-display {
+        display: none;
+    }
+}
+
+/* Hide zoom buttons on mobile */
+@media screen and (max-width: 768px) {
+    .leaflet-control-zoom {
+        display: none;
+    }
+}
+
+/* Add these styles for the popup */
+.leaflet-popup-content-wrapper {
+    background: rgba(40, 40, 40, 0.9);
+    color: white;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+}
+
+.leaflet-popup-content {
+    margin: 0;
+    padding: 12px;
+}
+
+.leaflet-popup-tip {
+    background: rgba(40, 40, 40, 0.9);
+}
+
+/* Custom classes for our popup content */
+.airport-popup {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: center;
+    min-width: 220px;
+    max-width: 320px;
+}
+
+.airport-popup .header {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+}
+
+.airport-popup .airport-code {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.airport-popup .weather-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.airport-popup .metar-data {
+    font-family: monospace;
+    font-size: 1.1em;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.5;
+    padding: 5px 0;
+}
+
+/* Weather Details Popup Container */
+.weather-details-popup {
+    position: absolute;
+    background-color: rgba(100, 100, 100, 0.75);
+    border-radius: 12px;
+    padding: 20px;
+    color: white;
+    min-width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+/* Header Section */
+.weather-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    background-color: rgba(120, 120, 120, 0.3);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.airport-title {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.elevation-info {
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+/* Main Weather Grid */
+.weather-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Weather Parameters */
+.weather-param {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+}
+
+.param-icon {
+    width: 24px;
+    height: 24px;
+    opacity: 0.8;
+}
+
+.param-value {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+}
+
+.param-label {
+    font-size: 13px;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+/* Wind Direction Compass */
+.wind-compass {
+    grid-column: 1 / -1;
+    height: 150px;
+    background: rgba(60, 60, 60, 0.3);
+    border-radius: 50%;
+    position: relative;
+    margin: 35px 25px;
+}
+
+.compass-circle {
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    position: relative;
+}
+
+.compass-marks {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.compass-direction {
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.compass-direction.north { top: -20px; left: 50%; transform: translateX(-50%); }
+.compass-direction.east { right: -20px; top: 50%; transform: translateY(-50%); }
+.compass-direction.south { bottom: -20px; left: 50%; transform: translateX(-50%); }
+.compass-direction.west { left: -20px; top: 50%; transform: translateY(-50%); }
+
+.wind-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+    margin-left: -60px;
+    margin-top: -60px;
+}
+
+/* Time Display */
+.time-display {
+    grid-column: 1 / -1;
+    text-align: right;
+    font-size: 13px;
+    opacity: 0.8;
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+/* Current Time in Header */
+.current-time {
+    font-size: 13px;
+    opacity: 0.9;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.current-time .issue-label {
+    font-size: 11px;
+    opacity: 0.8;
+    margin-bottom: 2px;
+}
+
+.param-gust {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 2px;
+    color: #FF00FF;
+}
+
+.param-gust strong {
+    font-weight: 600;
+}
+
+.airport-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.weather-icon {
+    width: 32px;
+    height: 32px;
+    margin-top: 2px;
+}
+
+/* Update existing airport-info if needed */
+.airport-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.flight-conditions {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.flight-conditions.vfr { background-color: green; }
+.flight-conditions.mvfr { background-color: yellow; color: black; }
+.flight-conditions.ifr { background-color: red; }
+.flight-conditions.lifr { background-color: purple; }
+.flight-conditions.windy { background-color: blue; }
+.flight-conditions.gusty { background-color: magenta; }
+

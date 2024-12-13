@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airport METAR Map</title>
+
+    <!-- Link to Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <!-- Link to your custom style.css -->
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="icon" type="image/png" href="https://img.icons8.com/?size=100&id=soxADT6b3GPK&format=png&color=000000">
+
+    <link rel="apple-touch-icon" href="https://img.icons8.com/?size=100&id=soxADT6b3GPK&format=png&color=000000">
+
+
+</head>
+
+<body>
+    <!-- The div that will hold the map -->
+    <div id="map"></div>
+
+    <!-- METAR Display Box -->
+    <div id="metar-display" class="weather-details-popup" style="position: absolute; top: 50px; left: 10px; z-index: 1000;">
+        Click on an airport to see weather details here. <a href="#" id="reset-metar" style="color: white; text-decoration: underline;">reset</a>
+    </div>
+
+    <!-- Last Updated Info -->
+    <div id="last-updated" style="position: absolute; bottom: 10px; left: 10px; font-size: 12px; color: white; z-index: 1000; background: rgba(0, 0, 0, 0.5); padding: 2px 5px;">
+        Last Updated: N/A
+    </div>
+
+    <!-- Include the Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <script>
+        // Airport coordinates
+        const airportCoordinates = {
+            NZAA: { lat: -37.008, lon: 174.792 },
+            NZCH: { lat: -43.487, lon: 172.531 },
+            NZDN: { lat: -45.908, lon: 170.199 },
+            NZGS: { lat: -38.667, lon: 177.982 },
+            NZNR: { lat: -39.466, lon: 176.871 },  
+            NZWR: { lat: -35.769, lon: 174.363 }, 
+            NZMF: { lat: -44.672, lon: 167.925 }, 
+            NZHK: { lat: -42.713, lon: 170.984 },
+            NZHN: { lat: -37.865, lon: 175.336 },
+            NZKI: { lat: -42.425, lon: 173.601 },
+            NZKK: { lat: -35.262, lon: 173.912 },
+            NZKT: { lat: -35.066, lon: 173.284 },
+            NZMS: { lat: -40.973, lon: 175.634 },
+            NZPM: { lat: -40.323, lon: 175.622 },
+            NZNS: { lat: -41.298, lon: 173.224 },
+            NZNP: { lat: -39.009, lon: 174.178 },
+            NZOH: { lat: -40.202, lon: 175.390 },
+            NZPP: { lat: -40.901, lon: 174.985 },
+            NZRO: { lat: -38.109, lon: 176.316 },
+            NZTG: { lat: -37.672, lon: 176.198 },
+            NZAP: { lat: -38.739, lon: 176.083 },
+            NZWB: { lat: -41.514, lon: 173.868 },
+            NZWF: { lat: -44.722, lon: 169.246 },
+            NZWK: { lat: -37.924, lon: 176.918 },
+            NZWS: { lat: -41.739, lon: 171.578 },
+            NZWU: { lat: -39.961, lon: 175.024 },
+            NZTU: { lat: -44.301, lon: 171.223 },
+            NZQN: { lat: -45.019, lon: 168.745 },
+            NZNV: { lat: -46.415, lon: 168.321 },
+            NZMC: { lat: -43.766, lon: 170.132 },
+            NZWN: { lat: -41.326, lon: 174.806 },
+        };
+
+        async function getWeatherByCoordinates(lat, lon) {
+            const apiKey = 'e3350a667f9e434ba50233919241212';  // I see this key in your original code
+            const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}`;
+
+            console.log('Attempting to fetch weather data from:', url);
+            try {
+                const response = await fetch(url);
+                console.log('Weather API response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Weather API error (status code: ${response.status})`);
+                }
+                
+                const data = await response.json();
+                console.log('Weather API response data:', data);
+                return data;
+            } catch (error) {
+                console.error('Detailed error fetching weather data:', error);
+                console.error('Error occurred with coordinates:', { lat, lon });
+                return null;
+            }
+        }
+
+        let lastUpdated = 'N/A'; // Store last updated time
+
+        // Function to fetch METAR data from the API
+        async function fetchMetarData() {
+            try {
+                const response = await fetch('https://api-preprod.avplan-efb.com/api/v4/opmet/metar', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer 7KDDlultS24J5NlI5qUrJQ==' // Replace with your actual API key
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    console.error('Error fetching METAR data:', data.error);
+                } else {
+                    lastUpdated = new Date().toLocaleString();  // Update last updated time
+                    logRawMetarData(data);
+                    const nzAirports = filterAirportsStartingWithNZ(data);
+                    updateWindyAirportConditions(nzAirports, data);
+                    updateGustyAirportConditions(nzAirports, data);
+                    addMarkersToMap(nzAirports);
+                    updateLastUpdatedTime();  // Update the last updated time display
+                }
+            } catch (error) {
+                console.error("Error fetching METAR data:", error);
+            }
+        }
+
+        // Log raw METAR data
+        function logRawMetarData(metarData) {
+            console.log("Raw METAR Data:", metarData);
+        }
+
+        // Filter METAR data for airports starting with 'NZ'
+        function filterAirportsStartingWithNZ(metarData) {
+            return metarData.filter(airport => airport.ident && airport.ident.startsWith("NZ"));
+        }
+
+        // Update flight conditions for windy airports
+        function updateWindyAirportConditions(nzAirports, metarData) {
+            const windyAirports = metarData.filter(airport => airport.windspeed > 24);
+            windyAirports.forEach(windyAirport => {
+                const airport = nzAirports.find(a => a.ident === windyAirport.ident);
+                if (airport) airport.flightcategory = 'Windy';
+            });
+        }
+
+        // Update flight conditions for gusty airports
+        function updateGustyAirportConditions(nzAirports, metarData) {
+            const gustyAirports = metarData.filter(airport => airport.windgust > 24);
+            gustyAirports.forEach(gustyAirport => {
+                const airport = nzAirports.find(a => a.ident === gustyAirport.ident);
+                if (airport) airport.flightcategory = 'Gusty';
+            });
+        }
+
+        // Add markers to map
+        function addMarkersToMap(nzAirports) {
+            nzAirports.forEach(airport => {
+                const airportCode = airport.ident;
+                const coordinates = airportCoordinates[airportCode];
+
+                if (coordinates) {
+                    let markerColor = 'green'; // Default color
+
+                    switch (airport.flightcategory) {
+                        case 'IFR': markerColor = 'red'; break;
+                        case 'MVFR': markerColor = 'yellow'; break;
+                        case 'LIFR': markerColor = 'purple'; break;
+                        case 'Windy': markerColor = 'blue'; break;
+                        case 'Gusty': markerColor = 'magenta'; break;
+                        case 'VFR': markerColor = 'green'; break;
+                        default: markerColor = 'gray'; break;
+                    }
+
+                    // Create a marker
+                    const marker = L.circleMarker([coordinates.lat, coordinates.lon], {
+                        color: markerColor,
+                        radius: 8,
+                        fillOpacity: 0.8
+                    });
+
+                    marker.on('click', async () => {
+                        console.log(`Clicked on: ${airportCode} with coordinates:`, coordinates);
+                        
+                        // Fetch weather and METAR data as before
+                        const weatherData = await getWeatherByCoordinates(coordinates.lat, coordinates.lon);
+                        console.log(`Weather data for ${airportCode}:`, weatherData);
+                        
+                        const airportMetar = nzAirports.find(a => a.ident === airportCode);
+                        
+                        // Add TAF fetch
+                        try {
+                            const tafData = await scrapeTafInfo(airportCode);
+                            console.log(`TAF data for ${airportCode}:`, tafData);
+                        } catch (error) {
+                            console.error(`Error fetching TAF for ${airportCode}:`, error);
+                        }
+
+                        if (airportMetar) {
+                            console.log(`METAR data for ${airportCode}:`, airportMetar);
+
+                            // Convert UNIX timestamp to Date object for METAR time
+                            const metarTime = new Date(airportMetar.created * 1000);
+                            const now = new Date();
+                            
+                            // Calculate time difference in minutes
+                            const timeDiff = Math.floor((now - metarTime) / (1000 * 60));
+                            
+                            // Format the time difference message
+                            let timeMessage;
+                            if (timeDiff < 1) {
+                                timeMessage = 'Weather information from latest METAR issued less than a minute ago';
+                            } else if (timeDiff === 1) {
+                                timeMessage = 'Weather information from latest METAR issued 1 minute ago';
+                            } else {
+                                timeMessage = `Weather information from latest METAR issued ${timeDiff} minutes ago`;
+                            }
+
+                            // Format UTC time from METAR
+                            const utcTime = metarTime.toLocaleTimeString('en-US', { 
+                                hour: '2-digit', 
+                                minute: '2-digit', 
+                                hour12: false,
+                                timeZone: 'UTC'
+                            });
+                            
+                            // Convert to NZ time
+                            const nzTime = new Date(metarTime.toLocaleString('en-US', { timeZone: 'Pacific/Auckland' }));
+                            const nzTimeStr = nzTime.toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                            });
+
+                            // Update the metar-display with the new weather details layout
+                            const metarDisplay = document.getElementById('metar-display');
+                            const windCompassHTML = `
+                                <div class="wind-compass">
+                                    <div class="compass-circle">
+                                        <div class="compass-marks">
+                                            <div class="compass-direction north">N</div>
+                                            <div class="compass-direction east">E</div>
+                                            <div class="compass-direction south">S</div>
+                                            <div class="compass-direction west">W</div>
+                                        </div>
+                                        <div class="wind-indicator" style="transform: rotate(${(airportMetar.winddir - 180)}deg)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="120" height="120">
+                                                <!-- Windsock Anchor Point -->
+                                                <circle cx="100" cy="100" r="3" fill="white" stroke="white" stroke-width="0.5" />
+
+                                                <!-- Windsock Strings -->
+                                                <line x1="100" y1="100" x2="80" y2="120" stroke="white" stroke-width="1" />
+                                                <line x1="100" y1="100" x2="120" y2="120" stroke="white" stroke-width="1" />
+
+                                                <!-- Windsock Body with 75% opacity -->
+                                                <path d="M80 120 L120 120 L110 205 Q100 215 90 205 Z" fill="#ff6600" fill-opacity="0.75" stroke="black" stroke-width="1" />
+
+                                                <!-- White Stripes with 75% opacity -->
+                                                <path d="M80 140 L120 140 L120 150 L80 150 Z" fill="white" fill-opacity="0.75" stroke="black" stroke-width="0.5" />
+                                                <path d="M85 165 L115 165 L115 175 L85 175 Z" fill="white" fill-opacity="0.75" stroke="black" stroke-width="0.5" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+
+                            metarDisplay.innerHTML = `
+                                <div class="weather-header">
+                                    <div class="airport-info">
+                                        <div class="airport-title-row">
+                                            <div class="airport-title">${airportCode}</div>
+                                            ${weatherData && weatherData.current ? 
+                                                `<img src="${weatherData.current.condition.icon}" alt="${weatherData.current.condition.text}" class="weather-icon">` 
+                                                : ''}
+                                            <div class="flight-conditions ${airportMetar.flightcategory.toLowerCase()}">${airportMetar.flightcategory}</div>
+                                        </div>
+                                        <div class="elevation-info">ELEV 41</div>
+                                    </div>
+                                    <div class="current-time">
+                                        <span class="issue-label">METAR issued at:</span>
+                                        ${utcTime} UTC (${nzTimeStr} Local)
+                                    </div>
+                                </div>
+
+                                <div class="weather-grid">
+                                    <div class="weather-param">
+                                        <span class="param-icon">🌡️</span>
+                                        <div>
+                                            <div class="param-value">${airportMetar.temp}°C</div>
+                                            <div class="param-label">Temperature</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="weather-param">
+                                        <span class="param-icon">💧</span>
+                                        <div>
+                                            <div class="param-value">${airportMetar.dp}°C</div>
+                                            <div class="param-label">Dew Point</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="weather-param">
+                                        <span class="param-icon">💨</span>
+                                        <div>
+                                            <div class="param-value">${airportMetar.winddir}° @ ${airportMetar.windspeed}kt</div>
+                                            <div class="param-label">Wind</div>
+                                            ${airportMetar.windgust ? `<div class="param-gust">Gusts <strong>${airportMetar.windgust}</strong>kt</div>` : ''}
+                                        </div>
+                                    </div>
+
+                                    <div class="weather-param">
+                                        <span class="param-icon">☁️</span>
+                                        <div>
+                                            <div class="param-value">
+                                                ${airportMetar.cloud && airportMetar.cloud.length > 0 
+                                                    ? `${airportMetar.cloud[0].cloud} ${airportMetar.cloud[0].cloud_altitude}00ft`
+                                                    : 'NCD'
+                                                }
+                                            </div>
+                                            <div class="param-label">Cloud</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="weather-param">
+                                        <span class="param-icon">⭕</span>
+                                        <div>
+                                            <div class="param-value">${airportMetar.qnh} hPa</div>
+                                            <div class="param-label">QNH</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="weather-param">
+                                        <span class="param-icon">👁️</span>
+                                        <div>
+                                            <div class="param-value">
+                                                ${airportMetar.visibility === 9999 
+                                                    ? '> 9,999 M' 
+                                                    : `${airportMetar.visibility/1000} km`
+                                                }
+                                            </div>
+                                            <div class="param-label">Visibility</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="wind-compass">
+                                        <div class="compass-circle">
+                                            <div class="compass-marks">
+                                                <div class="compass-direction north">N</div>
+                                                <div class="compass-direction east">E</div>
+                                                <div class="compass-direction south">S</div>
+                                                <div class="compass-direction west">W</div>
+                                            </div>
+                                            <div class="wind-indicator" style="transform: rotate(${(airportMetar.winddir)}deg)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="120" height="120">
+                                                    <!-- Windsock Anchor Point -->
+                                                    <circle cx="100" cy="100" r="3" fill="white" stroke="white" stroke-width="0.5" />
+
+                                                    <!-- Windsock Strings -->
+                                                    <line x1="100" y1="100" x2="80" y2="120" stroke="white" stroke-width="1" />
+                                                    <line x1="100" y1="100" x2="120" y2="120" stroke="white" stroke-width="1" />
+
+                                                    <!-- Windsock Body with 75% opacity -->
+                                                    <path d="M80 120 L120 120 L110 205 Q100 215 90 205 Z" fill="#ff6600" fill-opacity="0.75" stroke="black" stroke-width="1" />
+
+                                                    <!-- White Stripes with 75% opacity -->
+                                                    <path d="M80 140 L120 140 L120 150 L80 150 Z" fill="white" fill-opacity="0.75" stroke="black" stroke-width="0.5" />
+                                                    <path d="M85 165 L115 165 L115 175 L85 175 Z" fill="white" fill-opacity="0.75" stroke="black" stroke-width="0.5" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="time-display">
+                                        ${timeMessage}
+                                    </div>
+                                </div>
+                                <a href="#" id="reset-metar" style="color: white; text-decoration: underline;">reset</a>
+                            `;
+
+                            // Restore the original simple popup for the marker
+                            marker.bindPopup(`<strong>${airportCode}</strong><br>${cleanedMetar}`).openPopup();
+                        }
+                    });
+
+                    // Add the marker to the map
+                    marker.addTo(map);
+                }
+            });
+        }
+
+        // Reset METAR display when 'reset' is clicked
+        document.getElementById('metar-display').addEventListener('click', function(event) {
+            if (event.target && event.target.id === 'reset-metar') {
+                event.preventDefault();
+                const metarDisplay = document.getElementById('metar-display');
+                metarDisplay.innerHTML = 'Click on an airport to see METAR data here. <a href="#" id="reset-metar" style="color: white; text-decoration: underline;">reset</a>';
+            }
+        });
+
+// Initialize the map
+const map = L.map('map').setView([-41.2867, 174.7762], 6);
+
+// Check if the device is desktop
+const isDesktop = window.innerWidth > 768;  // Adjust the width value as needed
+
+// Add tile layer to the map
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
+}).addTo(map);
+
+// Remove zoom controls for desktop
+if (isDesktop) {
+    map.zoomControl.remove();
+}
+
+// Add legend to the map
+const legend = L.control({ position: 'topright' });
+legend.onAdd = function () {
+    const div = L.DomUtil.create('div', 'info legend');
+    const categories = ['VFR', 'IFR', 'MVFR', 'LIFR', 'Windy', 'Gusty'];
+    const colors = ['green', 'red', 'yellow', 'purple', 'blue', 'magenta'];
+
+    div.innerHTML += "<strong>Weather for VFR Flying, NZ</strong><br>";
+
+    categories.forEach((category, index) => {
+        div.innerHTML +=
+            `<i style="background:${colors[index]}"></i> ${category}<br>`;
+    });
+
+    return div;
+};
+legend.addTo(map);
+
+
+        // Update the last updated time on the map
+        function updateLastUpdatedTime() {
+            const lastUpdatedDisplay = document.getElementById('last-updated');
+            lastUpdatedDisplay.textContent = `Last Updated: ${lastUpdated}`;
+        }
+
+        // Fetch METAR data immediately on load
+        fetchMetarData();
+
+        // Set interval to fetch new data every 30 minutes (1800000 ms)
+        setInterval(fetchMetarData, 1800000); // 30 minutes
+
+        const CORS_PROXY = 'https://corsproxy.io/?';  // Using a different CORS proxy
+        const URL = CORS_PROXY + encodeURIComponent('https://www.ifis.airways.co.nz/script/briefing/met_briefing_proc.asp');
+        const LOGIN_URL = CORS_PROXY + encodeURIComponent('https://www.ifis.airways.co.nz/secure/script/user_reg/login_proc.asp');
+
+        async function scrapeTafInfo(airportCode) {
+            try {
+                const response = await fetch(`http://localhost:5000/taf/${airportCode}`);
+                const data = await response.json();
+                
+                console.log('TAF Response:', data);
+                
+                if (data.success) {
+                    return data.taf;
+                } else {
+                    throw new Error(data.error || 'Failed to fetch TAF');
+                }
+            } catch (error) {
+                console.error('Detailed error:', error);
+                throw new Error(`Error fetching TAF for ${airportCode}: ${error.message}`);
+            }
+        }
+    </script>
+
+</body>
+</html>
