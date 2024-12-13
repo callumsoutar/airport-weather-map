@@ -451,7 +451,8 @@ legend.addTo(map);
 
         async function scrapeTafInfo(airportCode) {
             try {
-                const response = await fetch(`http://localhost:5000/taf/${airportCode}`);
+                // Replace with your Render URL
+                const response = await fetch(`https://your-service-name.onrender.com/taf/${airportCode}`);
                 const data = await response.json();
                 
                 console.log('TAF Response:', data);
