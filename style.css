@@ -356,11 +356,19 @@ body {
 
 /* Time Display */
 .time-display {
-    grid-column: 1 / -1;
-    text-align: right;
-    font-size: 13px;
-    opacity: 0.8;
+    grid-column: span 2;
+    text-align: left;
     margin-top: 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Style the reset link to be inline with text */
+.time-display a {
+    color: white;
+    text-decoration: underline;
+    margin-left: 8px;
+    display: inline;
 }
 
 /* Current Time in Header */
@@ -438,32 +446,28 @@ body {
 
 /* Update existing mobile styles and add new ones */
 @media screen and (max-width: 768px) {
+    #metar-display,
     .weather-details-popup {
-        width: 85vw;
-        max-width: 350px;
-        font-size: 13px;
-        left: 50% !important; /* override inline style */
-        transform: translateX(-50%);
-        top: 20px !important; /* override inline style */
-        display: block !important; /* Ensure it's visible */
-        position: absolute !important; /* Ensure proper positioning */
-        z-index: 1000; /* Keep it above other elements */
-    }
-
-    /* Remove any display:none that might be affecting mobile */
-    #metar-display {
-        display: block !important;
-        position: absolute;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1000;
-        width: 85vw;
-        max-width: 350px;
+        width: 100% !important; /* Full width */
+        max-width: none !important; /* Remove max-width constraint */
+        left: 0 !important; /* Align to left edge */
+        right: 0 !important; /* Align to right edge */
+        transform: none !important; /* Remove transform */
+        margin: 0 !important; /* Remove margins */
+        top: 0 !important; /* Align to top */
+        border-radius: 0 !important; /* Remove border radius since it's full width */
+        padding: 15px !important; /* Keep some padding for content */
     }
 
     .weather-grid {
         gap: 8px;
+    }
+
+    .metar-raw {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        margin: 5px 0;
+        padding: 10px;
     }
 
     .compass-circle {
@@ -560,7 +564,7 @@ body {
     text-align: left;
     font-size: 16px;
     color: rgba(255, 255, 255, 0.9);
-    margin: 10px 0 5px 0;
+    margin: 15px 0 10px 0;
     padding: 0 0 0 2px;
     text-transform: uppercase;
     font-weight: 500;
@@ -696,5 +700,69 @@ body {
     white-space: pre-wrap;
     max-width: 100%;
     overflow-wrap: break-word;
+}
+
+/* Mobile adjustments for metar-display */
+@media screen and (max-width: 768px) {
+    #metar-display {
+        max-width: 98vw; /* Increased from 95vw to almost full width */
+        left: 1vw; /* Adjusted to maintain center position */
+        margin: 0 auto; /* Help with centering */
+    }
+
+    /* Ensure metar-raw is visible on mobile */
+    .metar-raw {
+        background-color: rgba(255, 255, 255, 0.1); /* Make sure background is visible */
+        border-radius: 8px;
+        margin: 5px 0;
+        padding: 10px;
+    }
+}
+
+/* Style for the time display and reset link container */
+.time-display {
+    grid-column: span 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Time display styles */
+.time-display {
+    grid-column: span 2;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.time-display a {
+    color: white;
+    text-decoration: underline;
+    margin-left: 8px;
+    display: inline;
+}
+
+/* Hide reset link on mobile */
+@media screen and (max-width: 768px) {
+    .time-display a {
+        display: none; /* Hide reset link on mobile */
+    }
+}
+
+/* METAR Title Styling - exactly matching wind title */
+.metar-title {
+    grid-column: span 2;
+    text-align: left;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 15px 0 10px 0;
+    padding: 0 0 0 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 

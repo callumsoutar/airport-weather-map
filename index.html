@@ -273,6 +273,7 @@
                                         ${utcTime} UTC (${nzTimeStr} Local)
                                     </div>
                                 </div>
+                                <div class="metar-title">✈️ METAR</div>
 
                                 <div class="weather-grid">
                                     <div class="weather-param">
@@ -374,10 +375,9 @@
                                     </div>
 
                                     <div class="time-display">
-                                        ${timeMessage}
+                                        ${timeMessage} <a href="#" id="reset-metar">reset</a>
                                     </div>
                                 </div>
-                                <a href="#" id="reset-metar" style="color: white; text-decoration: underline;">reset</a>
                             `;
 
                             // Restore the original simple popup for the marker
