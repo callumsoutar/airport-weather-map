@@ -326,8 +326,8 @@
                                         <div>
                                             <div class="param-value">
                                                 ${airportMetar.visibility === 9999 
-                                                    ? '> 9,999 M' 
-                                                    : `${airportMetar.visibility/1000} km`
+                                                    ? '> 10 km' 
+                                                    : `${(airportMetar.visibility/1000).toFixed(1)} km`
                                                 }
                                             </div>
                                             <div class="param-label">Visibility</div>
@@ -367,6 +367,10 @@
                                                 </svg>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div class="metar-raw">
+                                        ${airportMetar.metar}
                                     </div>
 
                                     <div class="time-display">
@@ -439,11 +443,37 @@ legend.addTo(map);
             lastUpdatedDisplay.textContent = `Last Updated: ${lastUpdated}`;
         }
 
-        // Fetch METAR data immediately on load
-        fetchMetarData();
+        // Replace your current interval code with this:
+        function scheduleNextUpdate() {
+            const now = new Date();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            
+            // Calculate time until next update
+            let waitMinutes;
+            if (minutes < 15) {
+                waitMinutes = 15 - minutes;
+            } else if (minutes < 45) {
+                waitMinutes = 45 - minutes;
+            } else {
+                waitMinutes = 75 - minutes; // 15 minutes after next hour
+            }
+            
+            // Convert to milliseconds and subtract elapsed seconds
+            const waitTime = (waitMinutes * 60 - seconds) * 1000;
+            
+            console.log(`Next update scheduled in ${waitMinutes} minutes and ${seconds} seconds`);
+            
+            // Schedule next update
+            setTimeout(() => {
+                fetchMetarData();
+                scheduleNextUpdate(); // Schedule next update after fetching
+            }, waitTime);
+        }
 
-        // Set interval to fetch new data every 30 minutes (1800000 ms)
-        setInterval(fetchMetarData, 1800000); // 30 minutes
+        // Initial fetch and schedule
+        fetchMetarData();
+        scheduleNextUpdate();
 
         // Update the click event handler
         document.addEventListener('click', function(e) {
