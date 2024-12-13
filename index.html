@@ -256,6 +256,7 @@
                             `;
 
                             metarDisplay.innerHTML = `
+                                <button class="mobile-exit-button">✕</button>
                                 <div class="weather-header">
                                     <div class="airport-info">
                                         <div class="airport-title-row">
@@ -333,6 +334,7 @@
                                         </div>
                                     </div>
 
+                                    <div class="wind-title">💨 WIND (°T)</div>
                                     <div class="wind-compass">
                                         <div class="compass-circle">
                                             <div class="compass-marks">
@@ -341,6 +343,12 @@
                                                 <div class="compass-direction south">S</div>
                                                 <div class="compass-direction west">W</div>
                                             </div>
+                                            <div class="compass-center-speed ${
+                                                ((airportMetar.winddir + 360) % 360 >= 270 || 
+                                                 (airportMetar.winddir + 360) % 360 < 90) 
+                                                    ? 'above' 
+                                                    : 'below'
+                                            }">${airportMetar.winddir}° ${airportMetar.windspeed}kt</div>
                                             <div class="wind-indicator" style="transform: rotate(${(airportMetar.winddir)}deg)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="120" height="120">
                                                     <!-- Windsock Anchor Point -->
@@ -436,6 +444,33 @@ legend.addTo(map);
 
         // Set interval to fetch new data every 30 minutes (1800000 ms)
         setInterval(fetchMetarData, 1800000); // 30 minutes
+
+        // Update the click event handler
+        document.addEventListener('click', function(e) {
+            const metarDisplay = document.getElementById('metar-display');
+            
+            // When clicking either the exit button or reset link
+            if (e.target.classList.contains('mobile-exit-button') || 
+                (e.target && e.target.id === 'reset-metar')) {
+                e.preventDefault(); // Prevent default for the reset link
+                if (metarDisplay) {
+                    metarDisplay.style.display = 'none';
+                    // Reset the content
+                    metarDisplay.innerHTML = 'Click on an airport to see METAR data here. <a href="#" id="reset-metar" style="color: white; text-decoration: underline;">reset</a>';
+                    metarDisplay.style.display = 'block';
+                }
+            }
+
+            // When clicking outside the weather window
+            if (!e.target.closest('#metar-display') && !e.target.closest('.leaflet-marker-icon')) {
+                if (metarDisplay) {
+                    metarDisplay.style.display = 'none';
+                    // Reset the content
+                    metarDisplay.innerHTML = 'Click on an airport to see METAR data here. <a href="#" id="reset-metar" style="color: white; text-decoration: underline;">reset</a>';
+                    metarDisplay.style.display = 'block';
+                }
+            }
+        });
     </script>
 
 </body>
