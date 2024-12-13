@@ -1,1 +1,17 @@
- 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.env
+.venv
+env/
+venv/
+ENV/
+.python-version
+
+# VS Code
+.vscode/
+
+# Environment variables
+.env 
