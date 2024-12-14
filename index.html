@@ -1456,7 +1456,7 @@ NZMC: {
                                                     : ''}
                                                 <div class="flight-conditions ${flightCategory.toLowerCase()}">${flightCategory}</div>
                                             </div>
-                                            <div class="elevation-info">ELEV 41</div>
+                                            <div class="elevation-info">ELEV ${airportData[airportCode].elevation}ft</div>
                                         </div>
                                         <div class="current-time">
                                             <span class="issue-label">METAR issued at:</span>
@@ -1634,6 +1634,7 @@ NZMC: {
                                             <h2>${airportData[airportCode].name}</h2>
                                             <div class="airport-code">${airportCode}</div>
                                             <div class="elevation">Elevation: ${airportData[airportCode].elevation}ft</div>
+                                            <button class="view-charts-btn" onclick="window.open('https://www.aip.net.nz/search/SearchForm?Search=${airportCode}', '_blank')">View Charts</button>
                                         </div>
 
                                         <div class="info-section runways">
