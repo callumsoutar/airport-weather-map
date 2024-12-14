@@ -23,6 +23,7 @@
     opacity: 0;
 }
 
+
 .info.legend i {
     width: 16px;
     height: 16px;
@@ -107,13 +108,21 @@ body {
     left: 10px;
     font-size: 14px;
     color: white;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgb(25, 25, 25);
     padding: 20px;
     border-radius: 24px;
     z-index: 1000;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     max-width: 400px;
     width: auto;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#metar-display.visible {
+    visibility: visible;
+    opacity: 1;
 }
 
 /* Hide 'metar-display' on mobile devices */
@@ -188,16 +197,23 @@ body {
 }
 
 /* Weather Details Popup Container */
-.weather-details-popup {
+.weather-tab {
     position: absolute;
-    background-color: rgba(100, 100, 100, 0.75);
-    border-radius: 12px;
+    background-color: rgb(25, 25, 25); /* Solid dark background */
+    border-radius: 24px;
     padding: 20px;
     color: white;
     min-width: 300px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-    box-sizing: border-box;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+@media screen and (max-width: 768px) {
+    .weather-tab {
+        background-color: rgb(25, 25, 25);
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
 }
 
 /* Header Section */
@@ -352,6 +368,22 @@ body {
     transform-origin: center center;
     margin-left: -60px;
     margin-top: -60px;
+    animation: windSockWave 3s ease-in-out infinite;
+}
+
+@keyframes windSockWave {
+    0% {
+        transform: rotate(var(--wind-direction));
+    }
+    25% {
+        transform: rotate(calc(var(--wind-direction) + 2deg));
+    }
+    75% {
+        transform: rotate(calc(var(--wind-direction) - 2deg));
+    }
+    100% {
+        transform: rotate(var(--wind-direction));
+    }
 }
 
 /* Time Display */
@@ -447,7 +479,7 @@ body {
 /* Update existing mobile styles and add new ones */
 @media screen and (max-width: 768px) {
     #metar-display,
-    .weather-details-popup {
+    .weather-tab {
         width: 100% !important; /* Full width */
         max-width: none !important; /* Remove max-width constraint */
         left: 0 !important; /* Align to left edge */
@@ -487,7 +519,7 @@ body {
 
 /* Add portrait-specific adjustments */
 @media screen and (max-width: 768px) and (orientation: portrait) {
-    .weather-details-popup {
+    .weather-tab {
         top: 10px !important;
     }
 
@@ -498,7 +530,7 @@ body {
 
 /* Mobile-specific styles */
 @media screen and (max-width: 768px) {
-    .weather-details-popup {
+    .weather-tab {
         background-color: rgb(25, 25, 25); /* Solid dark background */
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     }
@@ -541,13 +573,13 @@ body {
 }
 
 /* Weather window styling for both desktop and mobile */
-.weather-details-popup {
+.weather-tab {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 /* Mobile-specific enhancements */
 @media screen and (max-width: 768px) {
-    .weather-details-popup {
+    .weather-tab {
         background-color: rgb(25, 25, 25);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     }
@@ -582,12 +614,10 @@ body {
     left: 50%;
     transform: translateX(-50%);
     color: rgba(255, 255, 255, 0.9);
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     z-index: 2;
-    background-color: rgba(0, 0, 0, 0.15);
     padding: 4px 8px;
-    border-radius: 4px;
     transition: top 0.3s ease;
 }
 
@@ -600,14 +630,14 @@ body {
 }
 
 /* Weather window base styles - for desktop */
-.weather-details-popup {
+.weather-tab {
     border-radius: 24px; /* Increased from 16px for more rounded corners on desktop */
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 /* Mobile specific adjustments - keep the original mobile radius */
 @media screen and (max-width: 768px) {
-    .weather-details-popup {
+    .weather-tab {
         background-color: rgb(25, 25, 25);
         border-radius: 12px; /* Keep the original mobile radius */
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -622,7 +652,7 @@ body {
 
 /* Mobile specific adjustments */
 @media screen and (max-width: 768px) {
-    .weather-details-popup {
+    .weather-tab {
         background-color: rgb(25, 25, 25);
         border-radius: 12px; /* Slightly less rounded on mobile */
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -665,7 +695,7 @@ body {
     left: 10px;
     font-size: 14px;
     color: white;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgb(25, 25, 25);
     padding: 20px;
     border-radius: 24px;
     z-index: 1000;
@@ -764,5 +794,248 @@ body {
     text-transform: uppercase;
     font-weight: 500;
     letter-spacing: 0.5px;
+}
+
+/* Airport tooltip styling */
+.airport-tooltip {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.airport-tooltip:before {
+    display: none;
+}
+
+/* Tab styling - more rounded with animations */
+.tab-container {
+    display: flex;
+    gap: 0;
+    margin-bottom: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 3px;
+    border-radius: 20px; /* Much more rounded container */
+}
+
+.tab-button {
+    padding: 6px 12px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s ease;
+    border-radius: 16px; /* Much more rounded buttons */
+    position: relative;
+    z-index: 1;
+    flex: 1;
+}
+
+.tab-button:hover {
+    color: white;
+}
+
+.tab-button.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+/* Tab content animation */
+.tab-content {
+    display: none;
+}
+
+#weather-tab {
+    display: block;
+}
+
+/* Add scrolling to both tab contents */
+.tab-content {
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    padding-right: 15px;  /* Add space for scrollbar */
+    padding-left: 15px;   /* Balance the right padding */
+    padding-bottom: 15px; /* Add some bottom space */
+}
+
+/* Webkit scrollbar styling (Chrome, Safari, etc.) */
+.tab-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.tab-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tab-content::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.tab-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Add padding around the content in tab panels */
+.tab-content {
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    padding-right: 15px;  /* Add space for scrollbar */
+    padding-left: 15px;   /* Balance the right padding */
+    padding-bottom: 15px; /* Add some bottom space */
+}
+
+/* Adjust the container padding to maintain consistent spacing */
+.airport-info-container, .weather-grid {
+    padding: 15px 5px;    /* Reduce side padding since we added it to tab-content */
+}
+
+/* Keep the same scrollbar styling */
+.tab-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.tab-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tab-content::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.tab-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.airport-info-container {
+    padding: 20px;
+    color: #ffffff;
+    /* Remove scrolling properties since they're on the parent */
+    max-height: none;
+    overflow-y: visible;
+}
+
+/* Style the info sections to match weather tab items */
+.info-section {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Update header styling */
+.airport-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.food-location {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.location-name {
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.food-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.food-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #cccccc;
+}
+
+.food-location:hover {
+    background: rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease;
+}
+
+.food-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transition: background 0.3s ease;
+}
+
+.runway-analysis {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.analysis-title {
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: #ffffff;
+}
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.analysis-item {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.analysis-label {
+    font-size: 0.9em;
+    color: #cccccc;
+    margin-bottom: 5px;
+}
+
+.runway-value {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.crosswind-value {
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+.crosswind-safe {
+    color: #4CAF50;
+}
+
+.crosswind-caution {
+    color: #FF9800;
+}
+
+.crosswind-warning {
+    color: #f44336;
+}
+
+.crosswind-danger {
+    color: #9C27B0;
 }
 

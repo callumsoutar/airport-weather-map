@@ -15,6 +15,121 @@
 
     <link rel="apple-touch-icon" href="https://img.icons8.com/?size=100&id=soxADT6b3GPK&format=png&color=000000">
 
+    <style>
+        .airport-info-container {
+            padding: 20px;
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+        }
+
+        .airport-header {
+            margin-bottom: 25px;
+        }
+
+        .airport-header h2 {
+            font-size: 24px;
+            font-weight: 500;
+            margin: 0;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .airport-code {
+            font-size: 18px;
+            color: #a8a8a8;
+            margin: 5px 0;
+        }
+
+        .elevation {
+            font-size: 14px;
+            color: #cccccc;
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-section h3 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .runway-info {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .runway-designation {
+            font-size: 18px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .runway-details {
+            color: #cccccc;
+            line-height: 1.5;
+        }
+
+        .frequency-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .frequency-item:last-child {
+            border-bottom: none;
+        }
+
+        .freq-type {
+            color: #cccccc;
+        }
+
+        .freq-value {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .operations .hours,
+        .operations .type {
+            color: #ffffff;
+            margin: 5px 0;
+        }
+
+        .facilities div {
+            color: #ffffff;
+            margin: 5px 0;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+        }
+
+        /* Add subtle hover effects */
+        .info-section:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transition: background 0.3s ease;
+        }
+
+        .runway-info:hover,
+        .facilities div:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease;
+        }
+    </style>
 
 </head>
 
@@ -37,39 +152,1074 @@
 
     <script>
         // Airport coordinates
-        const airportCoordinates = {
-            NZAA: { lat: -37.008, lon: 174.792 },
-            NZCH: { lat: -43.487, lon: 172.531 },
-            NZDN: { lat: -45.908, lon: 170.199 },
-            NZGS: { lat: -38.667, lon: 177.982 },
-            NZNR: { lat: -39.466, lon: 176.871 },  
-            NZWR: { lat: -35.769, lon: 174.363 }, 
-            NZMF: { lat: -44.672, lon: 167.925 }, 
-            NZHK: { lat: -42.713, lon: 170.984 },
-            NZHN: { lat: -37.865, lon: 175.336 },
-            NZKI: { lat: -42.425, lon: 173.601 },
-            NZKK: { lat: -35.262, lon: 173.912 },
-            NZKT: { lat: -35.066, lon: 173.284 },
-            NZMS: { lat: -40.973, lon: 175.634 },
-            NZPM: { lat: -40.323, lon: 175.622 },
-            NZNS: { lat: -41.298, lon: 173.224 },
-            NZNP: { lat: -39.009, lon: 174.178 },
-            NZOH: { lat: -40.202, lon: 175.390 },
-            NZPP: { lat: -40.901, lon: 174.985 },
-            NZRO: { lat: -38.109, lon: 176.316 },
-            NZTG: { lat: -37.672, lon: 176.198 },
-            NZAP: { lat: -38.739, lon: 176.083 },
-            NZWB: { lat: -41.514, lon: 173.868 },
-            NZWF: { lat: -44.722, lon: 169.246 },
-            NZWK: { lat: -37.924, lon: 176.918 },
-            NZWS: { lat: -41.739, lon: 171.578 },
-            NZWU: { lat: -39.961, lon: 175.024 },
-            NZTU: { lat: -44.301, lon: 171.223 },
-            NZQN: { lat: -45.019, lon: 168.745 },
-            NZNV: { lat: -46.415, lon: 168.321 },
-            NZMC: { lat: -43.766, lon: 170.132 },
-            NZWN: { lat: -41.326, lon: 174.806 },
-        };
+        const airportData = {
+    NZAA: {
+        coordinates: { lat: -37.008, lon: 174.792 },
+        name: "Auckland International Airport",
+        elevation: 23,
+        runways: [
+            {
+                designation: "05R/23L", 
+                length: 3635,
+                surface: "Asphalt",
+                width: 45,
+                headings: [51, 231]
+            },
+            {
+                designation: "05L/23R",
+                length: 2150,
+                surface: "Asphalt", 
+                width: 45,
+                headings: [51, 231]
+            }
+        ],
+        facilities: {
+            food: [
+                {
+                    name: "International Terminal",
+                    options: ["McDonald's", "Subway", "Tank Juice", "Wishbone"]
+                },
+                {
+                    name: "Domestic Terminal", 
+                    options: ["Dunkin' Donuts", "Coffee Culture", "Subway"]
+                }
+            ],
+            fuel: ["AVGAS", "JET A1"],
+            parking: "Available - Multiple Options",
+            customs: true,
+            immigration: true
+        },
+        frequencies: {
+            ATIS: "127.80",
+            Ground: "121.90",
+            Tower: "118.70",
+            Approach: "124.30"
+        },
+        operatingHours: "24/7",
+        type: "International"
+    },
+    NZCH: {
+        coordinates: { lat: -43.487, lon: 172.531 },
+        name: "Christchurch International Airport",
+        elevation: 37,
+        runways: [
+            {
+                designation: "02/20",
+                length: 3288,
+                surface: "Asphalt",
+                width: 45,
+                headings: [20, 200]
+            },
+            {
+                designation: "11/29",
+                length: 1741,
+                surface: "Asphalt",
+                width: 45,
+                headings: [110, 290]
+            }
+        ],
+        facilities: {
+            food: [
+                {
+                    name: "International Terminal",
+                    options: ["McDonald's", "Sakura Sushi", "Coffee Culture"]
+                },
+                {
+                    name: "Domestic Terminal",
+                    options: ["Subway", "Burger King", "Coffee Culture"]
+                }
+            ],
+            fuel: ["AVGAS", "JET A1"],
+            parking: "Available - Multiple Options",
+            customs: true,
+            immigration: true
+        },
+        frequencies: {
+            ATIS: "126.10",
+            Ground: "121.90",
+            Tower: "118.40",
+            Approach: "125.50"
+        },
+        operatingHours: "24/7",
+        type: "International"
+    },
+    NZWN: {
+        coordinates: { lat: -41.326, lon: 174.806 },
+        name: "Wellington International Airport",
+        elevation: 41,
+        runways: [
+            {
+                designation: "16/34",
+                length: 2081,
+                surface: "Asphalt",
+                width: 45,
+                headings: [158, 338]
+            }
+        ],
+        facilities: {
+            food: [
+                {
+                    name: "Main Terminal",
+                    options: ["Best Ugly Bagels", "Mojo Coffee", "McDonald's", "Subway"]
+                }
+            ],
+            fuel: ["AVGAS", "JET A1"],
+            parking: "Available - Multiple Options",
+            customs: true,
+            immigration: true
+        },
+        frequencies: {
+            ATIS: "126.90",
+            Ground: "121.70",
+            Tower: "118.80",
+            Approach: "122.30"
+        },
+        operatingHours: "24/7",
+        type: "International"
+    },
+    NZDN: {
+      coordinates: { lat: -45.908, lon: 170.199 },
+      name: "Dunedin Airport",
+      elevation: 1.2,
+      runways: [
+          {
+              designation: "03/21",
+              length: 1900,
+              surface: "Asphalt",
+              width: 45,
+              headings: [30, 210]
+          }
+      ],
+      facilities: {
+          food: [
+              {
+                  name: "Terminal Building",
+                  options: ["Coffee Culture", "Cafe"]
+              }
+          ],
+          fuel: ["AVGAS", "JET A1"],
+          parking: "Available",
+          customs: true
+      },
+      frequencies: {
+          ATIS: "127.75",
+          Ground: "121.90",
+          Tower: "120.70",
+          Approach: "125.00"
+      },
+      operatingHours: "0600-2200",
+      type: "Regional"
+  },
+  NZGS: {
+      coordinates: { lat: -38.667, lon: 177.982 },
+      name: "Gisborne Airport",
+      elevation: 4,
+      runways: [
+          {
+              designation: "14/32",
+              length: 1310,
+              surface: "Asphalt",
+              width: 30,
+              headings: [140, 320]
+          }
+      ],
+      facilities: {
+          food: [
+              {
+                  name: "Terminal Cafe",
+                  options: ["Cafe"]
+              }
+          ],
+          fuel: ["AVGAS", "JET A1"],
+          parking: "Available",
+          customs: false
+      },
+      frequencies: {
+          ATIS: "126.85",
+          Tower: "118.60",
+          Approach: "124.50"
+      },
+      operatingHours: "0700-1800",
+      type: "Regional"
+  },
+  NZNR: {
+      coordinates: { lat: -39.466, lon: 176.871 },
+      name: "Napier Airport",
+      elevation: 2,
+      runways: [
+          {
+              designation: "16/34",
+              length: 1750,
+              surface: "Asphalt",
+              width: 45,
+              headings: [160, 340]
+          }
+      ],
+      facilities: {
+          food: [
+              {
+                  name: "Terminal Building",
+                  options: ["Cafe"]
+              }
+          ],
+          fuel: ["AVGAS", "JET A1"],
+          parking: "Available",
+          customs: false
+      },
+      frequencies: {
+          ATIS: "126.85",
+          Tower: "125.30",
+          Approach: "124.50"
+      },
+      operatingHours: "0600-2000",
+      type: "Regional"
+  },
+  NZWR: {
+      coordinates: { lat: -35.769, lon: 174.363 },
+      name: "Whangarei Airport",
+      elevation: 37,
+      runways: [
+          {
+              designation: "06/24",
+              length: 1097,
+              surface: "Asphalt",
+              width: 30,
+              headings: [60, 240]
+          }
+      ],
+      facilities: {
+          food: [
+              {
+                  name: "Terminal Building",
+                  options: ["Vending Machines"]
+              }
+          ],
+          fuel: ["AVGAS", "JET A1"],
+          parking: "Available",
+          customs: false
+      },
+      frequencies: {
+          AFIS: "118.60"
+      },
+      operatingHours: "0700-1900",
+      type: "Regional"
+  },
+
+  NZMF: {
+    coordinates: { lat: -44.672, lon: 167.925 },
+    name: "Milford Sound Airport",
+    elevation: 9,
+    runways: [
+        {
+            designation: "11/29",
+            length: 792,
+            surface: "Asphalt",
+            width: 15,
+            headings: [110, 290]
+        }
+    ],
+    facilities: {
+        food: [
+            {
+                name: "No permanent facilities",
+                options: ["None"]
+            }
+        ],
+        fuel: ["AVGAS"],
+        parking: "Limited",
+        customs: false
+    },
+    frequencies: {
+        UNICOM: "119.10"
+    },
+    operatingHours: "Daylight hours only",
+    type: "Tourist/Scenic",
+    notes: "Scenic flight destination, weather dependent operations"
+},
+NZHK: {
+    coordinates: { lat: -42.713, lon: 170.984 },
+    name: "Hokitika Airport",
+    elevation: 39,
+    runways: [
+        {
+            designation: "03/21",
+            length: 1314,
+            surface: "Asphalt",
+            width: 30,
+            headings: [30, 210]
+        }
+    ],
+    facilities: {
+        food: [
+            {
+                name: "Terminal Building",
+                options: ["Cafe"]
+            }
+        ],
+        fuel: ["AVGAS", "JET A1"],
+        parking: "Available",
+        customs: false
+    },
+    frequencies: {
+        AFIS: "118.30"
+    },
+    operatingHours: "0700-1800",
+    type: "Regional"
+},
+NZHN: {
+    coordinates: { lat: -37.865, lon: 175.336 },
+    name: "Hamilton Airport",
+    elevation: 172,
+    runways: [
+        {
+            designation: "18L/36R",
+            length: 2195,
+            surface: "Asphalt",
+            width: 45,
+            headings: [180, 360]
+        }
+    ],
+    facilities: {
+        food: [
+            {
+                name: "Terminal Building",
+                options: ["Cafe", "Restaurant"]
+            }
+        ],
+        fuel: ["AVGAS", "JET A1"],
+        parking: "Available",
+        customs: true
+    },
+    frequencies: {
+        ATIS: "127.80",
+        Tower: "126.80",
+        Ground: "121.90"
+    },
+    operatingHours: "0600-2200",
+    type: "Regional"
+},
+NZKI: {
+    coordinates: { lat: -42.425, lon: 173.601 },
+    name: "Kaikoura Airport",
+    elevation: 6,
+    runways: [
+        {
+            designation: "05/23",
+            length: 1300,
+            surface: "Grass",
+            width: 30,
+            headings: [50, 230]
+        }
+    ],
+    facilities: {
+        food: [
+            {
+                name: "No permanent facilities",
+                options: ["None"]
+            }
+        ],
+        fuel: ["AVGAS"],
+        parking: "Available",
+        customs: false
+    },
+    frequencies: {
+        UNICOM: "119.10"
+    },
+    operatingHours: "Daylight hours only",
+    type: "Tourist/Scenic",
+    notes: "Popular for whale watching flights"
+},
+
+NZKK: {
+  coordinates: { lat: -35.262, lon: 173.912 },
+  name: "Kerikeri Airport",
+  elevation: 492,
+  runways: [
+      {
+          designation: "03/21",
+          length: 1200,
+          surface: "Asphalt",
+          width: 30,
+          headings: [30, 210]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe"]
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      AFIS: "118.70"
+  },
+  operatingHours: "0700-1900",
+  type: "Regional"
+},
+NZKT: {
+  coordinates: { lat: -35.066, lon: 173.284 },
+  name: "Kaitaia Airport",
+  elevation: 80,
+  runways: [
+      {
+          designation: "07/25",
+          length: 1450,
+          surface: "Asphalt",
+          width: 30,
+          headings: [70, 250]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "No permanent facilities",
+              options: ["None"]
+          }
+      ],
+      fuel: ["AVGAS"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      UNICOM: "119.10"
+  },
+  operatingHours: "Daylight hours only",
+  type: "Regional"
+},
+NZMS: {
+  coordinates: { lat: -40.973, lon: 175.634 },
+  name: "Masterton Airport",
+  elevation: 364,
+  runways: [
+      {
+          designation: "06/24",
+          length: 1208,
+          surface: "Grass",
+          width: 30,
+          headings: [60, 240]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "No permanent facilities",
+              options: ["None"]
+          }
+      ],
+      fuel: ["AVGAS"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      UNICOM: "119.10"
+  },
+  operatingHours: "Daylight hours only",
+  type: "Regional"
+},
+NZPM: {
+  coordinates: { lat: -40.323, lon: 175.622 },
+  name: "Palmerston North Airport",
+  elevation: 151,
+  runways: [
+      {
+          designation: "07/25",
+          length: 1902,
+          surface: "Asphalt",
+          width: 45,
+          headings: [70, 250]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe", "Coffee Cart"]
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      ATIS: "126.90",
+      Tower: "120.60",
+      Ground: "121.90"
+  },
+  operatingHours: "0600-2200",
+  type: "Regional"
+},
+
+NZNS: {
+  coordinates: { lat: -41.298, lon: 173.224 },
+  name: "Nelson Airport",
+  elevation: 5,
+  runways: [
+      {
+          designation: "02/20",
+          length: 1427,
+          surface: "Asphalt",
+          width: 45,
+          headings: [20, 200]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe", "Restaurant"],
+              notes: "Hours vary based on flight schedule"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      ATIS: "127.85",
+      Tower: "118.70",
+      Ground: "121.90"
+  },
+  operatingHours: "0600-2200",
+  type: "Regional",
+  seasonal: {
+      notes: "Busy during summer tourist season",
+      peakPeriod: "December-February"
+  }
+},
+NZNP: {
+  coordinates: { lat: -39.009, lon: 174.178 },
+  name: "New Plymouth Airport",
+  elevation: 97,
+  runways: [
+      {
+          designation: "05/23",
+          length: 1310,
+          surface: "Asphalt",
+          width: 30,
+          headings: [50, 230]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe"],
+              notes: "New terminal opened 2020"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      ATIS: "126.85",
+      Tower: "124.80"
+  },
+  operatingHours: "0600-2000",
+  type: "Regional"
+},
+NZOH: {
+  coordinates: { lat: -40.202, lon: 175.390 },
+  name: "Ohakea Air Force Base",
+  elevation: 157,
+  runways: [
+      {
+          designation: "09/27",
+          length: 2438,
+          surface: "Asphalt",
+          width: 45,
+          headings: [90, 270]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Military Base",
+              options: ["Not available to public"]
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Military only",
+      customs: false
+  },
+  frequencies: {
+      Tower: "118.30",
+      Approach: "125.10"
+  },
+  operatingHours: "Military hours",
+  type: "Military",
+  notes: "Prior permission required (PPR)"
+},
+NZPP: {
+  coordinates: { lat: -40.901, lon: 174.985 },
+  name: "Paraparaumu Airport",
+  elevation: 22,
+  runways: [
+      {
+          designation: "16/34",
+          length: 1287,
+          surface: "Asphalt",
+          width: 30,
+          headings: [160, 340]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe"],
+              notes: "Limited hours"
+          }
+      ],
+      fuel: ["AVGAS"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      AFIS: "118.30"
+  },
+  operatingHours: "0700-1900",
+  type: "Regional",
+  seasonal: {
+      notes: "Weather dependent operations common"
+  }
+},
+
+NZRO: {
+  coordinates: { lat: -38.109, lon: 176.316 },
+  name: "Rotorua Airport",
+  elevation: 285,
+  runways: [
+      {
+          designation: "18/36",
+          length: 1960,
+          surface: "Asphalt",
+          width: 45,
+          headings: [180, 360]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe", "Coffee Cart"],
+              notes: "Hours align with flight schedule"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: true
+  },
+  frequencies: {
+      ATIS: "126.85",
+      Tower: "120.40"
+  },
+  operatingHours: "0600-2200",
+  type: "Regional",
+  seasonal: {
+      notes: "Tourist peak December-February",
+      peakHours: "0700-1900"
+  }
+},
+NZTG: {
+  coordinates: { lat: -37.672, lon: 176.198 },
+  name: "Tauranga Airport",
+  elevation: 13,
+  runways: [
+      {
+          designation: "07/25",
+          length: 1825,
+          surface: "Asphalt",
+          width: 30,
+          headings: [70, 250]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe"],
+              notes: "Open during main operating hours"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      ATIS: "126.85",
+      Tower: "118.30",
+      Ground: "121.90"
+  },
+  operatingHours: "0600-2200",
+  type: "Regional"
+},
+NZAP: {
+  coordinates: { lat: -38.739, lon: 176.083 },
+  name: "Taupo Airport",
+  elevation: 395,
+  runways: [
+      {
+          designation: "17/35",
+          length: 1386,
+          surface: "Asphalt",
+          width: 30,
+          headings: [170, 350]
+      },
+      {
+          designation: "11/29",
+          length: 1200,
+          surface: "Grass",
+          width: 30,
+          headings: [110, 290]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe"],
+              notes: "Hours vary seasonally"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      AFIS: "118.40"
+  },
+  operatingHours: "0700-1900",
+  type: "Regional",
+  seasonal: {
+      notes: "Busy with tourist flights in summer",
+      peakPeriod: "December-March"
+  }
+},
+NZWB: {
+  coordinates: { lat: -41.514, lon: 173.868 },
+  name: "Woodbourne Airport (Blenheim)",
+  elevation: 109,
+  runways: [
+      {
+          designation: "06/24",
+          length: 1425,
+          surface: "Asphalt",
+          width: 45,
+          headings: [60, 240]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe"],
+              notes: "Limited hours"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      ATIS: "127.85",
+      Tower: "118.70"
+  },
+  operatingHours: "0700-2000",
+  type: "Regional/Military",
+  notes: "Shared civilian/RNZAF facility"
+},
+
+NZWF: {
+  coordinates: { lat: -44.722, lon: 169.246 },
+  name: "Wanaka Airport",
+  elevation: 352,
+  runways: [
+      {
+          designation: "11/29",
+          length: 1200,
+          surface: "Asphalt",
+          width: 30,
+          headings: [110, 290]
+      },
+      {
+          designation: "03/21",
+          length: 850,
+          surface: "Grass",
+          width: 30,
+          headings: [30, 210]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe"],
+              notes: "Hours vary with flight schedule"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      UNICOM: "119.10"
+  },
+  operatingHours: "0700-2000",
+  type: "Regional",
+  seasonal: {
+      notes: "Very busy during Warbirds Over Wanaka (biennial airshow)",
+      events: ["Warbirds Over Wanaka - Easter (even years)"]
+  }
+},
+NZWK: {
+  coordinates: { lat: -37.924, lon: 176.918 },
+  name: "Whakatane Airport",
+  elevation: 20,
+  runways: [
+      {
+          designation: "05/23",
+          length: 1280,
+          surface: "Asphalt",
+          width: 30,
+          headings: [50, 230]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe"],
+              notes: "Limited hours"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      AFIS: "119.10"
+  },
+  operatingHours: "0700-1900",
+  type: "Regional"
+},
+NZWS: {
+  coordinates: { lat: -41.739, lon: 171.578 },
+  name: "Westport Airport",
+  elevation: 4,
+  runways: [
+      {
+          designation: "04/22",
+          length: 1280,
+          surface: "Asphalt",
+          width: 30,
+          headings: [40, 220]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "No permanent facilities",
+              options: ["None"]
+          }
+      ],
+      fuel: ["AVGAS"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      UNICOM: "119.10"
+  },
+  operatingHours: "Daylight hours only",
+  type: "Regional",
+  seasonal: {
+      notes: "Weather dependent operations common on West Coast"
+  }
+},
+NZWU: {
+  coordinates: { lat: -39.961, lon: 175.024 },
+  name: "Whanganui Airport",
+  elevation: 27,
+  runways: [
+      {
+          designation: "11/29",
+          length: 1350,
+          surface: "Asphalt",
+          width: 30,
+          headings: [110, 290]
+      },
+      {
+          designation: "15/33",
+          length: 840,
+          surface: "Grass",
+          width: 30,
+          headings: [150, 330]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe"],
+              notes: "Hours align with scheduled flights"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      AFIS: "118.60"
+  },
+  operatingHours: "0700-1900",
+  type: "Regional"
+},
+
+NZTU: {
+  coordinates: { lat: -44.301, lon: 171.223 },
+  name: "Timaru Airport",
+  elevation: 22,
+  runways: [
+      {
+          designation: "02/20",
+          length: 1280,
+          surface: "Asphalt",
+          width: 30,
+          headings: [20, 200]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Vending Machines"],
+              notes: "Limited facilities"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      UNICOM: "119.10"
+  },
+  operatingHours: "0700-1900",
+  type: "Regional"
+},
+NZQN: {
+  coordinates: { lat: -45.019, lon: 168.745 },
+  name: "Queenstown Airport",
+  elevation: 357,
+  runways: [
+      {
+          designation: "05/23",
+          length: 1911,
+          surface: "Asphalt",
+          width: 45,
+          headings: [50, 230]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Airspresso Cafe", "Coffee Cart", "Bar"],
+              notes: "Multiple options available during peak hours"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available - Multiple Options",
+      customs: true
+  },
+  frequencies: {
+      ATIS: "127.85",
+      Tower: "118.10",
+      Ground: "121.90"
+  },
+  operatingHours: "0600-2200",
+  type: "International",
+  seasonal: {
+      notes: "Extremely busy during ski season (June-September) and summer peak (December-February)",
+      peakPeriods: ["Winter Ski Season", "Summer Tourism"]
+  }
+},
+NZNV: {
+  coordinates: { lat: -46.415, lon: 168.321 },
+  name: "Invercargill Airport",
+  elevation: 1,
+  runways: [
+      {
+          designation: "04/22",
+          length: 2210,
+          surface: "Asphalt",
+          width: 45,
+          headings: [40, 220]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "Terminal Building",
+              options: ["Cafe"],
+              notes: "Hours align with flight schedule"
+          }
+      ],
+      fuel: ["AVGAS", "JET A1"],
+      parking: "Available",
+      customs: false
+  },
+  frequencies: {
+      ATIS: "126.85",
+      Tower: "118.70",
+      Ground: "121.90"
+  },
+  operatingHours: "0600-2100",
+  type: "Regional"
+},
+NZMC: {
+  coordinates: { lat: -43.766, lon: 170.132 },
+  name: "Mount Cook Airport",
+  elevation: 732,
+  runways: [
+      {
+          designation: "16/34",
+          length: 1080,
+          surface: "Gravel",
+          width: 30,
+          headings: [160, 340]
+      }
+  ],
+  facilities: {
+      food: [
+          {
+              name: "No permanent facilities",
+              options: ["None"],
+              notes: "Nearby Mt Cook Village has food options"
+          }
+      ],
+      fuel: ["AVGAS"],
+      parking: "Limited",
+      customs: false
+  },
+  frequencies: {
+      UNICOM: "119.10"
+  },
+  operatingHours: "Daylight hours only",
+  type: "Tourist/Scenic",
+  seasonal: {
+      notes: "Highly weather dependent, busiest during summer months",
+      peakPeriod: "November-April",
+      weatherConsiderations: "Mountain weather can change rapidly"
+  }
+}
+};
+
+        // Add this at the top of your script, after your airport coordinates
+        const flightCategoryCache = {};
 
         async function getWeatherByCoordinates(lat, lon) {
             const apiKey = 'e3350a667f9e434ba50233919241212';  // I see this key in your original code
@@ -156,10 +1306,18 @@
         function addMarkersToMap(nzAirports) {
             nzAirports.forEach(airport => {
                 const airportCode = airport.ident;
-                const coordinates = airportCoordinates[airportCode];
+                const coordinates = airportData[airportCode]?.coordinates;
 
                 if (coordinates) {
                     let markerColor = 'green'; // Default color
+
+                    // If there's no flight category but we have one cached, use the cached value
+                    if (!airport.flightcategory && flightCategoryCache[airportCode]) {
+                        airport.flightcategory = flightCategoryCache[airportCode];
+                    } else if (airport.flightcategory) {
+                        // If we have a new flight category, cache it
+                        flightCategoryCache[airportCode] = airport.flightcategory;
+                    }
 
                     switch (airport.flightcategory) {
                         case 'IFR': markerColor = 'red'; break;
@@ -176,20 +1334,34 @@
                         color: markerColor,
                         radius: 8,
                         fillOpacity: 0.8
+                    }).bindTooltip(airportCode, {
+                        permanent: false,
+                        direction: 'top',
+                        className: 'airport-tooltip',
+                        offset: [0, -5]
                     });
 
                     marker.on('click', async () => {
                         console.log(`Clicked on: ${airportCode} with coordinates:`, coordinates);
                         
-                        // Fetch weather and METAR data as before
-                        const weatherData = await getWeatherByCoordinates(coordinates.lat, coordinates.lon);
+                        // Add this logging for runway data
+                        console.log(`Runway data for ${airportCode}:`, airportData[airportCode].runways);
+                        console.log(`Runway headings for ${airportCode}:`, airportData[airportCode].runways.map(runway => runway.headings).flat());
+                        
+                        const weatherData = await getWeatherByCoordinates(
+                            airportData[airportCode].coordinates.lat,
+                            airportData[airportCode].coordinates.lon
+                        );
                         console.log(`Weather data for ${airportCode}:`, weatherData);
                         
                         const airportMetar = nzAirports.find(a => a.ident === airportCode);
                         
                         if (airportMetar) {
                             console.log(`METAR data for ${airportCode}:`, airportMetar);
-
+                            
+                            // This line is good - it handles undefined flight categories
+                            const flightCategory = airportMetar.flightcategory || 'Unknown';
+                            
                             // Convert UNIX timestamp to Date object for METAR time
                             const metarTime = new Date(airportMetar.created * 1000);
                             const now = new Date();
@@ -234,154 +1406,354 @@
                                             <div class="compass-direction south">S</div>
                                             <div class="compass-direction west">W</div>
                                         </div>
-                                        <div class="wind-indicator" style="transform: rotate(${(airportMetar.winddir - 180)}deg)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="120" height="120">
-                                                <!-- Windsock Anchor Point -->
-                                                <circle cx="100" cy="100" r="3" fill="white" stroke="white" stroke-width="0.5" />
-
-                                                <!-- Windsock Strings -->
-                                                <line x1="100" y1="100" x2="80" y2="120" stroke="white" stroke-width="1" />
-                                                <line x1="100" y1="100" x2="120" y2="120" stroke="white" stroke-width="1" />
-
-                                                <!-- Windsock Body with 75% opacity -->
-                                                <path d="M80 120 L120 120 L110 205 Q100 215 90 205 Z" fill="#ff6600" fill-opacity="0.75" stroke="black" stroke-width="1" />
-
-                                                <!-- White Stripes with 75% opacity -->
-                                                <path d="M80 140 L120 140 L120 150 L80 150 Z" fill="white" fill-opacity="0.75" stroke="black" stroke-width="0.5" />
-                                                <path d="M85 165 L115 165 L115 175 L85 175 Z" fill="white" fill-opacity="0.75" stroke="black" stroke-width="0.5" />
-                                            </svg>
-                                        </div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="120" height="120">
+                                            <!-- Debug: Add a single test line -->
+                                            <line x1="100" y1="100" x2="100" y2="10" stroke="red" stroke-width="2" />
+                                            
+                                            <!-- Add runway lines -->
+                                            ${airportData[airportCode].runways.map(runway => {
+                                                console.log('Processing runway:', runway);
+                                                return runway.headings.map(heading => {
+                                                    // Add 20° to the heading and handle 360° wrap-around
+                                                    const magneticHeading = (heading + 20) % 360;
+                                                    console.log('Magnetic heading:', magneticHeading);
+                                                    const angle = magneticHeading * Math.PI / 180;
+                                                    return `<line 
+                                                        x1="100" 
+                                                        y1="100" 
+                                                        x2="${100 + Math.sin(angle) * 90}" 
+                                                        y2="${100 - Math.cos(angle) * 90}" 
+                                                        stroke="white" 
+                                                        stroke-width="2" 
+                                                        stroke-opacity="1"
+                                                    />`;
+                                                }).join('');
+                                            }).join('')}
+                                            
+                                            <!-- Rest of your wind indicator elements -->
+                                        </svg>
                                     </div>
                                 </div>
                             `;
 
                             metarDisplay.innerHTML = `
                                 <button class="mobile-exit-button">✕</button>
-                                <div class="weather-header">
-                                    <div class="airport-info">
-                                        <div class="airport-title-row">
-                                            <div class="airport-title">${airportCode}</div>
-                                            ${weatherData && weatherData.current ? 
-                                                `<img src="${weatherData.current.condition.icon}" alt="${weatherData.current.condition.text}" class="weather-icon">` 
-                                                : ''}
-                                            <div class="flight-conditions ${airportMetar.flightcategory.toLowerCase()}">${airportMetar.flightcategory}</div>
+                                
+                                <!-- Add tab buttons -->
+                                <div class="tab-container">
+                                    <button class="tab-button active" data-tab="weather">Weather</button>
+                                    <button class="tab-button" data-tab="airport">Airport</button>
+                                </div>
+
+                                <!-- Weather content (your existing content) -->
+                                <div class="tab-content" id="weather-tab" style="display: block;">
+                                    <div class="weather-header">
+                                        <div class="airport-info">
+                                            <div class="airport-title-row">
+                                                <div class="airport-title">${airportCode}</div>
+                                                ${weatherData && weatherData.current ? 
+                                                    `<img src="${weatherData.current.condition.icon}" alt="${weatherData.current.condition.text}" class="weather-icon">` 
+                                                    : ''}
+                                                <div class="flight-conditions ${flightCategory.toLowerCase()}">${flightCategory}</div>
+                                            </div>
+                                            <div class="elevation-info">ELEV 41</div>
                                         </div>
-                                        <div class="elevation-info">ELEV 41</div>
+                                        <div class="current-time">
+                                            <span class="issue-label">METAR issued at:</span>
+                                            ${utcTime} UTC (${nzTimeStr} Local)
+                                        </div>
                                     </div>
-                                    <div class="current-time">
-                                        <span class="issue-label">METAR issued at:</span>
-                                        ${utcTime} UTC (${nzTimeStr} Local)
+                                    <div class="metar-title">✈️ METAR</div>
+
+                                    <div class="weather-grid">
+                                        <div class="weather-param">
+                                            <span class="param-icon">🌡️</span>
+                                            <div>
+                                                <div class="param-value">${airportMetar.temp}°C</div>
+                                                <div class="param-label">Temperature</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="weather-param">
+                                            <span class="param-icon">💧</span>
+                                            <div>
+                                                <div class="param-value">${airportMetar.dp}°C</div>
+                                                <div class="param-label">Dew Point</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="weather-param">
+                                            <span class="param-icon">💨</span>
+                                            <div>
+                                                <div class="param-value">${airportMetar.winddir}° @ ${airportMetar.windspeed}kt</div>
+                                                <div class="param-label">Wind</div>
+                                                ${airportMetar.windgust ? `<div class="param-gust">Gusts <strong>${airportMetar.windgust}</strong>kt</div>` : ''}
+                                            </div>
+                                        </div>
+
+                                        <div class="weather-param">
+                                            <span class="param-icon">☁️</span>
+                                            <div>
+                                                <div class="param-value">
+                                                    ${airportMetar.cloud && airportMetar.cloud.length > 0 
+                                                        ? `${airportMetar.cloud[0].cloud} ${airportMetar.cloud[0].cloud_altitude}00ft`
+                                                        : 'NCD'
+                                                    }
+                                                </div>
+                                                <div class="param-label">Cloud</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="weather-param">
+                                            <span class="param-icon">⭕</span>
+                                            <div>
+                                                <div class="param-value">${airportMetar.qnh} hPa</div>
+                                                <div class="param-label">QNH</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="weather-param">
+                                            <span class="param-icon">👁️</span>
+                                            <div>
+                                                <div class="param-value">
+                                                    ${airportMetar.visibility === 9999 
+                                                        ? '> 10 km' 
+                                                        : `${(airportMetar.visibility/1000).toFixed(1)} km`
+                                                    }
+                                                </div>
+                                                <div class="param-label">Visibility</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="wind-title">💨 WIND (°T)</div>
+                                        <div class="wind-compass">
+                                            <div class="compass-circle">
+                                                <div class="compass-marks">
+                                                    <div class="compass-direction north">N</div>
+                                                    <div class="compass-direction east">E</div>
+                                                    <div class="compass-direction south">S</div>
+                                                    <div class="compass-direction west">W</div>
+                                                </div>
+                                                <!-- Static runway lines in their own SVG -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="120" height="120" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                                    ${airportData[airportCode].runways.map(runway => {
+                                                        console.log('Processing runway:', runway);
+                                                        return runway.headings.map(heading => {
+                                                            // Add 20° to the heading and handle 360° wrap-around
+                                                            const magneticHeading = (heading + 20) % 360;
+                                                            console.log('Magnetic heading:', magneticHeading);
+                                                            const angle = magneticHeading * Math.PI / 180;
+                                                            return `
+                                                                <line 
+                                                                    x1="${100 - Math.sin(angle) * 140}"
+                                                                    y1="${100 + Math.cos(angle) * 140}"
+                                                                    x2="${100 + Math.sin(angle) * 140}"
+                                                                    y2="${100 - Math.cos(angle) * 140}"
+                                                                    stroke="#000000" 
+                                                                    stroke-width="16" 
+                                                                    stroke-opacity="1"
+                                                                    stroke-linecap="square"
+                                                                />
+                                                                <line 
+                                                                    x1="${100 - Math.sin(angle) * 140}"
+                                                                    y1="${100 + Math.cos(angle) * 140}"
+                                                                    x2="${100 + Math.sin(angle) * 140}"
+                                                                    y2="${100 - Math.cos(angle) * 140}"
+                                                                    stroke="#ffffff" 
+                                                                    stroke-width="17" 
+                                                                    stroke-opacity="0.1"
+                                                                    stroke-linecap="square"
+                                                                />
+                                                                <line 
+                                                                    x1="${100 - Math.sin(angle) * 135}"
+                                                                    y1="${100 + Math.cos(angle) * 135}"
+                                                                    x2="${100 - Math.sin(angle) * 125}"
+                                                                    y2="${100 + Math.cos(angle) * 125}"
+                                                                    stroke="#ffffff" 
+                                                                    stroke-width="3" 
+                                                                    stroke-opacity="0.5"
+                                                                />
+                                                                <line 
+                                                                    x1="${100 + Math.sin(angle) * 135}"
+                                                                    y1="${100 - Math.cos(angle) * 135}"
+                                                                    x2="${100 + Math.sin(angle) * 125}"
+                                                                    y2="${100 - Math.cos(angle) * 125}"
+                                                                    stroke="#ffffff" 
+                                                                    stroke-width="3" 
+                                                                    stroke-opacity="0.5"
+                                                                />
+                                                                <line 
+                                                                    x1="${100 - Math.sin(angle) * 130}"
+                                                                    y1="${100 + Math.cos(angle) * 130}"
+                                                                    x2="${100 + Math.sin(angle) * 130}"
+                                                                    y2="${100 - Math.cos(angle) * 130}"
+                                                                    stroke="#ffffff" 
+                                                                    stroke-width="1" 
+                                                                    stroke-opacity="0.3"
+                                                                    stroke-dasharray="5,5"
+                                                                />
+                                                            `;
+                                                        }).join('');
+                                                    }).join('')}
+                                                </svg>
+                                                <div class="compass-center-speed ${
+                                                    ((airportMetar.winddir + 360) % 360 >= 270 || 
+                                                     (airportMetar.winddir + 360) % 360 < 90) 
+                                                        ? 'above' 
+                                                        : 'below'
+                                                }">${airportMetar.winddir}° ${airportMetar.windspeed}kt</div>
+                                                <!-- Rotating wind indicator in separate SVG -->
+                                                <div class="wind-indicator" style="transform: rotate(${(airportMetar.winddir)}deg)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="120" height="120">
+                                                        <circle cx="100" cy="100" r="3" fill="white" stroke="white" stroke-width="0.5" />
+                                                        <line x1="100" y1="100" x2="80" y2="120" stroke="white" stroke-width="1" />
+                                                        <line x1="100" y1="100" x2="120" y2="120" stroke="white" stroke-width="1" />
+                                                        <path d="M80 120 L120 120 L110 205 Q100 215 90 205 Z" fill="#ff6600" fill-opacity="0.75" stroke="black" stroke-width="1" />
+                                                        <path d="M80 140 L120 140 L120 150 L80 150 Z" fill="white" fill-opacity="0.75" stroke="black" stroke-width="0.5" />
+                                                        <path d="M85 165 L115 165 L115 175 L85 175 Z" fill="white" fill-opacity="0.75" stroke="black" stroke-width="0.5" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="metar-raw">
+                                            ${airportMetar.metar}
+                                        </div>
+
+                                        <div class="time-display">
+                                            ${timeMessage} <a href="#" id="reset-metar">reset</a>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="metar-title">✈️ METAR</div>
 
-                                <div class="weather-grid">
-                                    <div class="weather-param">
-                                        <span class="param-icon">🌡️</span>
-                                        <div>
-                                            <div class="param-value">${airportMetar.temp}°C</div>
-                                            <div class="param-label">Temperature</div>
+                                <!-- Airport content (empty for now) -->
+                                <div class="tab-content active" id="airport-tab" style="display: block;">
+                                    <!-- Airport info will go here -->
+                                    <div class="airport-info-container">
+                                        <div class="airport-header">
+                                            <h2>${airportData[airportCode].name}</h2>
+                                            <div class="airport-code">${airportCode}</div>
+                                            <div class="elevation">Elevation: ${airportData[airportCode].elevation}ft</div>
                                         </div>
-                                    </div>
 
-                                    <div class="weather-param">
-                                        <span class="param-icon">💧</span>
-                                        <div>
-                                            <div class="param-value">${airportMetar.dp}°C</div>
-                                            <div class="param-label">Dew Point</div>
+                                        <div class="info-section runways">
+                                            <h3>🛫 Runways</h3>
+                                            ${airportData[airportCode].runways.map(runway => `
+                                                <div class="runway-info">
+                                                    <div class="runway-designation">${runway.designation}</div>
+                                                    <div class="runway-details">
+                                                        Length: ${runway.length}m • Width: ${runway.width}m
+                                                        <br>Surface: ${runway.surface}
+                                                        <br>Headings: ${runway.headings.join('°/')}°
+                                                    </div>
+                                                </div>
+                                            `).join('')}
                                         </div>
-                                    </div>
 
-                                    <div class="weather-param">
-                                        <span class="param-icon">💨</span>
-                                        <div>
-                                            <div class="param-value">${airportMetar.winddir}° @ ${airportMetar.windspeed}kt</div>
-                                            <div class="param-label">Wind</div>
-                                            ${airportMetar.windgust ? `<div class="param-gust">Gusts <strong>${airportMetar.windgust}</strong>kt</div>` : ''}
+                                        <div class="info-section frequencies">
+                                            <h3>📡 Radio Frequencies</h3>
+                                            ${Object.entries(airportData[airportCode].frequencies).map(([type, freq]) => `
+                                                <div class="frequency-item">
+                                                    <span class="freq-type">${type}:</span>
+                                                    <span class="freq-value">${freq}</span>
+                                                </div>
+                                            `).join('')}
                                         </div>
-                                    </div>
 
-                                    <div class="weather-param">
-                                        <span class="param-icon">☁️</span>
-                                        <div>
-                                            <div class="param-value">
-                                                ${airportMetar.cloud && airportMetar.cloud.length > 0 
-                                                    ? `${airportMetar.cloud[0].cloud} ${airportMetar.cloud[0].cloud_altitude}00ft`
-                                                    : 'NCD'
-                                                }
-                                            </div>
-                                            <div class="param-label">Cloud</div>
+                                        <div class="info-section operations">
+                                            <h3>⏰ Operations</h3>
+                                            <div class="hours">${airportData[airportCode].operatingHours}</div>
+                                            <div class="type">Airport Type: ${airportData[airportCode].type}</div>
                                         </div>
-                                    </div>
 
-                                    <div class="weather-param">
-                                        <span class="param-icon">⭕</span>
-                                        <div>
-                                            <div class="param-value">${airportMetar.qnh} hPa</div>
-                                            <div class="param-label">QNH</div>
+                                        <div class="info-section facilities">
+                                            <h3>🏢 Facilities</h3>
+                                            <div class="fuel">Fuel Available: ${airportData[airportCode].facilities.fuel.join(', ')}</div>
+                                            <div class="parking">Parking: ${airportData[airportCode].facilities.parking}</div>
+                                            ${airportData[airportCode].facilities.customs ? '<div class="customs">Customs Available</div>' : ''}
                                         </div>
-                                    </div>
 
-                                    <div class="weather-param">
-                                        <span class="param-icon">👁️</span>
-                                        <div>
-                                            <div class="param-value">
-                                                ${airportMetar.visibility === 9999 
-                                                    ? '> 10 km' 
-                                                    : `${(airportMetar.visibility/1000).toFixed(1)} km`
-                                                }
-                                            </div>
-                                            <div class="param-label">Visibility</div>
+                                        <div class="info-section food">
+                                            <h3>🍽️ Food & Dining</h3>
+                                            ${airportData[airportCode].facilities.food.map(location => `
+                                                <div class="food-location">
+                                                    <div class="location-name">${location.name}</div>
+                                                    <div class="food-options">
+                                                        ${location.options.map(option => `
+                                                            <div class="food-item">${option}</div>
+                                                        `).join('')}
+                                                    </div>
+                                                </div>
+                                            `).join('')}
                                         </div>
-                                    </div>
-
-                                    <div class="wind-title">💨 WIND (°T)</div>
-                                    <div class="wind-compass">
-                                        <div class="compass-circle">
-                                            <div class="compass-marks">
-                                                <div class="compass-direction north">N</div>
-                                                <div class="compass-direction east">E</div>
-                                                <div class="compass-direction south">S</div>
-                                                <div class="compass-direction west">W</div>
-                                            </div>
-                                            <div class="compass-center-speed ${
-                                                ((airportMetar.winddir + 360) % 360 >= 270 || 
-                                                 (airportMetar.winddir + 360) % 360 < 90) 
-                                                    ? 'above' 
-                                                    : 'below'
-                                            }">${airportMetar.winddir}° ${airportMetar.windspeed}kt</div>
-                                            <div class="wind-indicator" style="transform: rotate(${(airportMetar.winddir)}deg)">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="120" height="120">
-                                                    <!-- Windsock Anchor Point -->
-                                                    <circle cx="100" cy="100" r="3" fill="white" stroke="white" stroke-width="0.5" />
-
-                                                    <!-- Windsock Strings -->
-                                                    <line x1="100" y1="100" x2="80" y2="120" stroke="white" stroke-width="1" />
-                                                    <line x1="100" y1="100" x2="120" y2="120" stroke="white" stroke-width="1" />
-
-                                                    <!-- Windsock Body with 75% opacity -->
-                                                    <path d="M80 120 L120 120 L110 205 Q100 215 90 205 Z" fill="#ff6600" fill-opacity="0.75" stroke="black" stroke-width="1" />
-
-                                                    <!-- White Stripes with 75% opacity -->
-                                                    <path d="M80 140 L120 140 L120 150 L80 150 Z" fill="white" fill-opacity="0.75" stroke="black" stroke-width="0.5" />
-                                                    <path d="M85 165 L115 165 L115 175 L85 175 Z" fill="white" fill-opacity="0.75" stroke="black" stroke-width="0.5" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="metar-raw">
-                                        ${airportMetar.metar}
-                                    </div>
-
-                                    <div class="time-display">
-                                        ${timeMessage} <a href="#" id="reset-metar">reset</a>
                                     </div>
                                 </div>
                             `;
 
-                            // Restore the original simple popup for the marker
-                            marker.bindPopup(`<strong>${airportCode}</strong><br>${cleanedMetar}`).openPopup();
+                            // Add wind animation
+                            const windIndicator = document.querySelector('.wind-indicator');
+                            if (windIndicator) {
+                                const windDirValue = `${airportMetar.winddir}deg`;
+                                windIndicator.style.setProperty('--wind-direction', windDirValue);
+                                console.log('Wind direction set to:', windDirValue);
+                            }
+
+                            metarDisplay.classList.add('visible');
+
+                            // Add tab switching functionality
+                            const tabButtons = document.querySelectorAll('.tab-button');
+                            const tabContents = document.querySelectorAll('.tab-content');
+
+                            tabButtons.forEach(button => {
+                                button.addEventListener('click', () => {
+                                    // Remove active class from all buttons and contents
+                                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                                    tabContents.forEach(content => {
+                                        content.classList.remove('active');
+                                        content.style.display = 'none';
+                                    });
+                                    
+                                    // Add active class to clicked button
+                                    button.classList.add('active');
+                                    
+                                    // Show and animate selected content
+                                    const tabId = button.getAttribute('data-tab');
+                                    const activeContent = document.getElementById(`${tabId}-tab`);
+                                    activeContent.style.display = 'block';
+                                    
+                                    // Trigger animation
+                                    setTimeout(() => {
+                                        activeContent.classList.add('active');
+                                    }, 10);
+                                });
+                            });
+
+                            // Make sure weather tab is active by default
+                            document.querySelector('[data-tab="weather"]').click();
+
+                            // Test runwayUse and crosswind functions
+                            const windDirection = 350;  
+                            const windSpeed = 25;      
+                            const runways = airportData[airportCode].runways;
+                            
+                            console.log('RUNWAY AND CROSSWIND CALCULATION:');
+                            console.log('Input Data:');
+                            console.log('- Wind Direction:', windDirection + '°');
+                            console.log('- Wind Speed:', windSpeed + 'kt');
+                            console.log('- Magnetic Wind Direction:', (windDirection - 20) + '°');
+                            
+                            // Get runway in use
+                            const activeRunway = runwayUse(windDirection, runways);
+                            console.log('\nRUNWAY USE FUNCTION RESULT:');
+                            console.log('- Selected Runway:', activeRunway);
+                            
+                            // Calculate crosswind
+                            if (activeRunway) {
+                                const runwayHeading = activeRunway === '34' ? 338 : 158; // Match your actual runway headings
+                                const crosswind = calculateCrosswind(windSpeed, windDirection, runwayHeading);
+                                console.log('\nCROSSWIND CALCULATION RESULT:');
+                                console.log('- Crosswind Component:', crosswind + 'kt');
+                            }
                         }
                     });
 
@@ -484,23 +1856,169 @@ legend.addTo(map);
                 (e.target && e.target.id === 'reset-metar')) {
                 e.preventDefault(); // Prevent default for the reset link
                 if (metarDisplay) {
-                    metarDisplay.style.display = 'none';
-                    // Reset the content
+                    metarDisplay.classList.remove('visible');
                     metarDisplay.innerHTML = 'Click on an airport to see METAR data here. <a href="#" id="reset-metar" style="color: white; text-decoration: underline;">reset</a>';
-                    metarDisplay.style.display = 'block';
                 }
             }
 
             // When clicking outside the weather window
             if (!e.target.closest('#metar-display') && !e.target.closest('.leaflet-marker-icon')) {
                 if (metarDisplay) {
-                    metarDisplay.style.display = 'none';
-                    // Reset the content
+                    metarDisplay.classList.remove('visible');
                     metarDisplay.innerHTML = 'Click on an airport to see METAR data here. <a href="#" id="reset-metar" style="color: white; text-decoration: underline;">reset</a>';
-                    metarDisplay.style.display = 'block';
                 }
             }
         });
+
+        function createAirportInfoHTML(airport) {
+            return `
+                <div class="airport-info-container">
+                    <div class="airport-header">
+                        <h2>${airport.name}</h2>
+                        <div class="airport-code">${code}</div>
+                        <div class="elevation">Elevation: ${airport.elevation}m</div>
+                    </div>
+
+                    <div class="info-section runways">
+                        <h3>🛫 Runways</h3>
+                        ${airport.runways.map(runway => `
+                            <div class="runway-info">
+                                <div class="runway-designation">${runway.designation}</div>
+                                <div class="runway-details">
+                                    Length: ${runway.length}m • Width: ${runway.width}m
+                                    <br>Surface: ${runway.surface}
+                                    <br>Headings: ${runway.headings.join('°/')}°
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="info-section frequencies">
+                        <h3>📡 Radio Frequencies</h3>
+                        ${Object.entries(airport.frequencies).map(([type, freq]) => `
+                            <div class="frequency-item">
+                                <span class="freq-type">${type}:</span>
+                                <span class="freq-value">${freq}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="info-section operations">
+                        <h3>⏰ Operations</h3>
+                        <div class="hours">${airport.operatingHours}</div>
+                        <div class="type">Airport Type: ${airport.type}</div>
+                    </div>
+
+                    <div class="info-section facilities">
+                        <h3>🏢 Facilities</h3>
+                        <div class="fuel">Fuel Available: ${airport.facilities.fuel.join(', ')}</div>
+                        <div class="parking">Parking: ${airport.facilities.parking}</div>
+                        ${airport.facilities.customs ? '<div class="customs">Customs Available</div>' : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Inside your existing script tag, where you handle airport markers
+        const marker = L.marker([airportData[code].coordinates.lat, airportData[code].coordinates.lon])
+            .addTo(map)
+            .on('click', function() {
+                // Create or update airport info display
+                const airportInfoDisplay = document.getElementById('airport-display') || createAirportDisplay();
+                const airport = airportData[code];
+                
+                airportInfoDisplay.innerHTML = `
+                    <div class="airport-info-container">
+                        <div class="airport-header">
+                            <h2>${airport.name}</h2>
+                            <div class="airport-code">${code}</div>
+                            <div class="elevation">Elevation: ${airport.elevation}m</div>
+                        </div>
+
+                        <div class="info-section runways">
+                            <h3>🛫 Runways</h3>
+                            ${airport.runways.map(runway => `
+                                <div class="runway-info">
+                                    <div class="runway-designation">${runway.designation}</div>
+                                    <div class="runway-details">
+                                        Length: ${runway.length}m • Width: ${runway.width}m
+                                        <br>Surface: ${runway.surface}
+                                        <br>Headings: ${runway.headings.join('°/')}°
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="info-section frequencies">
+                            <h3>📡 Radio Frequencies</h3>
+                            ${Object.entries(airport.frequencies).map(([type, freq]) => `
+                                <div class="frequency-item">
+                                    <span class="freq-type">${type}:</span>
+                                    <span class="freq-value">${freq}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="info-section operations">
+                            <h3>⏰ Operations</h3>
+                            <div class="hours">${airport.operatingHours}</div>
+                            <div class="type">Airport Type: ${airport.type}</div>
+                        </div>
+
+                        <div class="info-section facilities">
+                            <h3>🏢 Facilities</h3>
+                            <div class="fuel">Fuel Available: ${airport.facilities.fuel.join(', ')}</div>
+                            <div class="parking">Parking: ${airport.facilities.parking}</div>
+                            ${airport.facilities.customs ? '<div class="customs">Customs Available</div>' : ''}
+                        </div>
+
+                        <div class="info-section food">
+                            <h3>🍽️ Food & Dining</h3>
+                            ${airport.facilities.food.map(location => `
+                                <div class="food-location">
+                                    <div class="location-name">${location.name}</div>
+                                    <div class="food-options">
+                                        ${location.options.map(option => `
+                                            <div class="food-item">${option}</div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                airportInfoDisplay.style.display = 'block';
+            });
+
+        function createAirportDisplay() {
+            const display = document.createElement('div');
+            display.id = 'airport-display';
+            display.className = 'weather-details-popup';
+            document.body.appendChild(display);
+            return display;
+        }
+
+        function runwayUse(windDirection, runways) {
+            const magneticWindDirection = windDirection - 20;
+            
+            // For Wellington's runway 16/34
+            // If magnetic wind is closer to 338° (RWY 34), return '34'
+            // If magnetic wind is closer to 158° (RWY 16), return '16'
+            const heading338diff = Math.abs(magneticWindDirection - 338);
+            const heading158diff = Math.abs(magneticWindDirection - 158);
+            
+            return heading338diff < heading158diff ? '34' : '16';
+        }
+
+        function calculateCrosswind(windSpeed, windDirection, runwayHeading) {
+            const windAngleRad = (windDirection * Math.PI) / 180;
+            const runwayAngleRad = (runwayHeading * Math.PI) / 180;
+            const angleRad = Math.abs(windAngleRad - runwayAngleRad);
+            const crosswind = Math.abs(windSpeed * Math.sin(angleRad));
+            
+            return Math.round(crosswind);
+        }
     </script>
 
 </body>
