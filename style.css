@@ -1031,6 +1031,7 @@ body {
     color: #FF9800;
 }
 
+
 .crosswind-warning {
     color: #f44336;
 }
@@ -1039,3 +1040,18 @@ body {
     color: #9C27B0;
 }
 
+.view-charts-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: white;
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.view-charts-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
