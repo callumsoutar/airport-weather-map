@@ -464,6 +464,15 @@ body {
 .flight-conditions.windy { background-color: blue; }
 .flight-conditions.gusty { background-color: magenta; }
 
+.flight-conditions.unknown {
+    background-color: #808080; /* Grey color for unknown */
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
 /* Mobile adjustments */
 @media screen and (max-width: 768px) {
     .weather-grid {
@@ -1054,4 +1063,20 @@ body {
 
 .view-charts-btn:hover {
     background: rgba(255, 255, 255, 0.2);
+}
+
+.crosswind-light {
+    color: #4CAF50; /* Green */
+}
+
+.crosswind-moderate {
+    color: #FF9800; /* Orange */
+}
+
+.crosswind-strong {
+    color: #f44336; /* Red */
+}
+
+.crosswind-extreme {
+    color: #9C27B0; /* Purple */
 }
