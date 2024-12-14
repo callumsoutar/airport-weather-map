@@ -129,6 +129,66 @@
             background: rgba(0, 0, 0, 0.3);
             transition: background 0.3s ease;
         }
+
+        /* Add or update these styles */
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Update the weather-details-popup styles */
+        .weather-details-popup {
+            position: absolute;
+            z-index: 1000;
+        }
+
+        @media screen and (max-width: 768px) {
+            .weather-details-popup {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
+                padding: 20px !important;
+                overflow-y: auto;
+                overflow-x: hidden;
+                box-sizing: border-box;
+                z-index: 1000;
+            }
+
+            /* Ensure map takes full width on mobile */
+            #map {
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+            }
+        }
+
+        .flight-conditions.unknown {
+            background-color: #808080; /* Grey color for unknown */
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
     </style>
 
 </head>
@@ -138,8 +198,9 @@
     <div id="map"></div>
 
     <!-- METAR Display Box -->
-    <div id="metar-display" class="weather-details-popup" style="position: absolute; top: 50px; left: 10px; z-index: 1000;">
-        Click on an airport to see weather details here. <a href="#" id="reset-metar" style="color: white; text-decoration: underline;">reset</a>
+    <div id="metar-display" class="weather-details-popup">
+        Click on an airport to see weather details here. 
+        <a href="#" id="reset-metar" style="color: white; text-decoration: underline;">reset</a>
     </div>
 
     <!-- Last Updated Info -->
@@ -1186,11 +1247,11 @@ NZMC: {
   elevation: 732,
   runways: [
       {
-          designation: "16/34",
+          designation: "31/13",
           length: 1080,
           surface: "Gravel",
           width: 30,
-          headings: [160, 340]
+          headings: [130, 310]
       }
   ],
   facilities: {
@@ -1395,6 +1456,11 @@ NZMC: {
                                 hour12: false
                             });
 
+                            // Calculate runway and crosswind values
+                            const activeRunway = runwayUse(airportMetar.winddir, airportData[airportCode].runways);
+                            const runwayHeading = activeRunway === '34' ? 338 : 158;
+                            const crosswind = calculateCrosswind(airportMetar.windspeed, airportMetar.winddir, airportData[airportCode].runways, activeRunway);
+
                             // Update the metar-display with the new weather details layout
                             const metarDisplay = document.getElementById('metar-display');
                             const windCompassHTML = `
@@ -1467,9 +1533,10 @@ NZMC: {
 
                                     <div class="weather-grid">
                                         <div class="weather-param">
+                                            
                                             <span class="param-icon">🌡️</span>
                                             <div>
-                                                <div class="param-value">${airportMetar.temp}°C</div>
+                                                <div class="param-value">${airportMetar.temp ?? 'Unavailable'}°C</div>
                                                 <div class="param-label">Temperature</div>
                                             </div>
                                         </div>
@@ -1477,7 +1544,7 @@ NZMC: {
                                         <div class="weather-param">
                                             <span class="param-icon">💧</span>
                                             <div>
-                                                <div class="param-value">${airportMetar.dp}°C</div>
+                                                <div class="param-value">${airportMetar.dp ?? 'Unavailable'}°C</div>
                                                 <div class="param-label">Dew Point</div>
                                             </div>
                                         </div>
@@ -1485,7 +1552,7 @@ NZMC: {
                                         <div class="weather-param">
                                             <span class="param-icon">💨</span>
                                             <div>
-                                                <div class="param-value">${airportMetar.winddir}° @ ${airportMetar.windspeed}kt</div>
+                                                <div class="param-value">${airportMetar.winddir ? `${airportMetar.winddir}° @ ${airportMetar.windspeed ?? '0'}kt` : 'Unavailable'}</div>
                                                 <div class="param-label">Wind</div>
                                                 ${airportMetar.windgust ? `<div class="param-gust">Gusts <strong>${airportMetar.windgust}</strong>kt</div>` : ''}
                                             </div>
@@ -1507,7 +1574,7 @@ NZMC: {
                                         <div class="weather-param">
                                             <span class="param-icon">⭕</span>
                                             <div>
-                                                <div class="param-value">${airportMetar.qnh} hPa</div>
+                                                <div class="param-value">${airportMetar.qnh ?? 'Unavailable'} ${airportMetar.qnh ? 'hPa' : ''}</div>
                                                 <div class="param-label">QNH</div>
                                             </div>
                                         </div>
@@ -1516,15 +1583,18 @@ NZMC: {
                                             <span class="param-icon">👁️</span>
                                             <div>
                                                 <div class="param-value">
-                                                    ${airportMetar.visibility === 9999 
-                                                        ? '> 10 km' 
-                                                        : `${(airportMetar.visibility/1000).toFixed(1)} km`
+                                                    ${airportMetar.visibility 
+                                                        ? (airportMetar.visibility === 9999 
+                                                            ? '> 10 km' 
+                                                            : `${(airportMetar.visibility/1000).toFixed(1)} km`)
+                                                        : 'Unavailable'
                                                     }
                                                 </div>
                                                 <div class="param-label">Visibility</div>
                                             </div>
                                         </div>
 
+                                        
                                         <div class="wind-title">💨 WIND (°T)</div>
                                         <div class="wind-compass">
                                             <div class="compass-circle">
@@ -1534,7 +1604,6 @@ NZMC: {
                                                     <div class="compass-direction south">S</div>
                                                     <div class="compass-direction west">W</div>
                                                 </div>
-                                                <!-- Static runway lines in their own SVG -->
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="120" height="120" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                                                     ${airportData[airportCode].runways.map(runway => {
                                                         console.log('Processing runway:', runway);
@@ -1616,6 +1685,23 @@ NZMC: {
                                             </div>
                                         </div>
 
+                                        <div class="weather-param">
+                                            <span class="param-icon">🛫</span>
+                                            <div>
+                                                <div class="param-value">RWY ${activeRunway ?? 'Unavailable'}</div>
+                                                <div class="param-label">Favoured Runway</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="weather-param">
+                                            <span class="param-icon">↔️</span>
+                                            <div>
+                                                <div class="param-value ${getCrosswindClass(crosswind)}">${isNaN(crosswind) ? 'Unavailable' : `${crosswind}kt`}</div>
+                                                <div class="param-label">Crosswind</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="wind-title">📋 RAW METAR</div>
                                         <div class="metar-raw">
                                             ${airportMetar.metar}
                                         </div>
@@ -1731,30 +1817,6 @@ NZMC: {
 
                             // Make sure weather tab is active by default
                             document.querySelector('[data-tab="weather"]').click();
-
-                            // Test runwayUse and crosswind functions
-                            const windDirection = 350;  
-                            const windSpeed = 25;      
-                            const runways = airportData[airportCode].runways;
-                            
-                            console.log('RUNWAY AND CROSSWIND CALCULATION:');
-                            console.log('Input Data:');
-                            console.log('- Wind Direction:', windDirection + '°');
-                            console.log('- Wind Speed:', windSpeed + 'kt');
-                            console.log('- Magnetic Wind Direction:', (windDirection - 20) + '°');
-                            
-                            // Get runway in use
-                            const activeRunway = runwayUse(windDirection, runways);
-                            console.log('\nRUNWAY USE FUNCTION RESULT:');
-                            console.log('- Selected Runway:', activeRunway);
-                            
-                            // Calculate crosswind
-                            if (activeRunway) {
-                                const runwayHeading = activeRunway === '34' ? 338 : 158; // Match your actual runway headings
-                                const crosswind = calculateCrosswind(windSpeed, windDirection, runwayHeading);
-                                console.log('\nCROSSWIND CALCULATION RESULT:');
-                                console.log('- Crosswind Component:', crosswind + 'kt');
-                            }
                         }
                     });
 
@@ -2001,24 +2063,94 @@ legend.addTo(map);
         }
 
         function runwayUse(windDirection, runways) {
-            const magneticWindDirection = windDirection - 20;
+            // Convert true wind direction to magnetic
+            const magneticWindDirection = (windDirection - 20 + 360) % 360;
             
-            // For Wellington's runway 16/34
-            // If magnetic wind is closer to 338° (RWY 34), return '34'
-            // If magnetic wind is closer to 158° (RWY 16), return '16'
-            const heading338diff = Math.abs(magneticWindDirection - 338);
-            const heading158diff = Math.abs(magneticWindDirection - 158);
+            let smallestDiff = 180;
+            let bestRunway = null;
             
-            return heading338diff < heading158diff ? '34' : '16';
+            runways.forEach(runway => {
+                const headings = runway.headings;
+                const designation = runway.designation.split('/');
+                
+                headings.forEach((heading, index) => {
+                    let diff = Math.abs(magneticWindDirection - heading);
+                    // Handle wrap-around cases
+                    if (diff > 180) {
+                        diff = 360 - diff;
+                    }
+                    
+                    if (diff < smallestDiff) {
+                        smallestDiff = diff;
+                        bestRunway = designation[index];
+                    }
+                });
+            });
+            
+            console.log('Runway selection debug:');
+            console.log('True Wind:', windDirection);
+            console.log('Magnetic Wind:', magneticWindDirection);
+            console.log('Selected Runway:', bestRunway);
+            console.log('Angular Difference:', smallestDiff);
+            
+            return bestRunway;
         }
 
-        function calculateCrosswind(windSpeed, windDirection, runwayHeading) {
-            const windAngleRad = (windDirection * Math.PI) / 180;
-            const runwayAngleRad = (runwayHeading * Math.PI) / 180;
-            const angleRad = Math.abs(windAngleRad - runwayAngleRad);
+        function calculateCrosswind(windSpeed, trueWindDirection, runways, activeRunway) {
+            // Convert true wind direction to magnetic
+            const magneticWindDirection = (trueWindDirection - 20 + 360) % 360;
+            
+            // Find the magnetic heading for the active runway
+            let runwayHeading = null;
+            runways.forEach(runway => {
+                const designation = runway.designation.split('/');
+                const headings = runway.headings;
+                for (let i = 0; i < designation.length; i++) {
+                    if (designation[i] === activeRunway) {
+                        runwayHeading = headings[i];
+                        break;
+                    }
+                }
+            });
+            
+            if (!runwayHeading) {
+                console.error('Could not find heading for runway:', activeRunway);
+                return 0;
+            }
+            
+            // Calculate the angular difference between wind and runway
+            let angleDiff = Math.abs(magneticWindDirection - runwayHeading);
+            
+            // Ensure we're using the smaller angle (handle wrap-around)
+            if (angleDiff > 180) {
+                angleDiff = 360 - angleDiff;
+            }
+            
+            // Convert angle to radians for Math.sin
+            const angleRad = (angleDiff * Math.PI) / 180;
+            
+            // Calculate crosswind component using V × sin(θ)
             const crosswind = Math.abs(windSpeed * Math.sin(angleRad));
             
+            console.log('Crosswind calculation debug:');
+            console.log('True Wind Direction:', trueWindDirection);
+            console.log('Magnetic Wind Direction:', magneticWindDirection);
+            console.log('Active Runway:', activeRunway);
+            console.log('Runway Heading:', runwayHeading);
+            console.log('Angular Difference:', angleDiff);
+            console.log('Wind Speed:', windSpeed);
+            console.log('Calculated Crosswind:', Math.round(crosswind));
+            
             return Math.round(crosswind);
+        }
+
+        function getCrosswindClass(crosswind) {
+            if (isNaN(crosswind)) return '';
+            
+            if (crosswind <= 5) return 'crosswind-light';
+            if (crosswind <= 11) return 'crosswind-moderate';
+            if (crosswind <= 15) return 'crosswind-strong';
+            return 'crosswind-extreme';
         }
     </script>
 
